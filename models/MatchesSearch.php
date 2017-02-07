@@ -28,6 +28,8 @@ class MatchesSearch extends Matches {
 					'score_a',
 					'score_b',
 					'max_round',
+					'tac_pause_max',
+					'tac_pause_duration',
 					'overtime_startmoney',
 					'overtime_max_round',
 					'config_full_score',
@@ -81,7 +83,7 @@ class MatchesSearch extends Matches {
 	 * @return ActiveDataProvider
 	 */
 	public function search ($params) {
-		$query = Matches::find()->orderBy(['enable' =>SORT_DESC, 'startdate' =>SORT_DESC]);
+		$query = Matches::find()->orderBy(['enable' => SORT_DESC, 'startdate' => SORT_DESC]);
 
 // add conditions that should always apply here
 
@@ -90,7 +92,7 @@ class MatchesSearch extends Matches {
 		]);
 
 		$status = null;
-		if(is_array($this->status)){
+		if(is_array($this->status)) {
 			$status = $this->status;
 		}
 
@@ -114,6 +116,8 @@ class MatchesSearch extends Matches {
 			'score_a'                     => $this->score_a,
 			'score_b'                     => $this->score_b,
 			'max_round'                   => $this->max_round,
+			'tac_pause_max'               => $this->tac_pause_max,
+			'tac_pause_duration'          => $this->tac_pause_duration,
 			'overtime_startmoney'         => $this->overtime_startmoney,
 			'overtime_max_round'          => $this->overtime_max_round,
 			'config_full_score'           => $this->config_full_score,

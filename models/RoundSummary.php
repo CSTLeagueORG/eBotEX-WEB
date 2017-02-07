@@ -31,7 +31,7 @@ use Yii;
 	*
 			* @property Players $bestKiller
 			* @property Maps $map
-			* @property Matchs $match
+			* @property Matches $match
 	*/
 class RoundSummary extends \yii\db\ActiveRecord
 {
@@ -56,7 +56,7 @@ return [
             [['win_type', 'team_win', 'backup_file_name'], 'string', 'max' => 255],
             [['best_killer'], 'exist', 'skipOnError' => true, 'targetClass' => Players::className(), 'targetAttribute' => ['best_killer' => 'id']],
             [['map_id'], 'exist', 'skipOnError' => true, 'targetClass' => Maps::className(), 'targetAttribute' => ['map_id' => 'id']],
-            [['match_id'], 'exist', 'skipOnError' => true, 'targetClass' => Matchs::className(), 'targetAttribute' => ['match_id' => 'id']],
+            [['match_id'], 'exist', 'skipOnError' => true, 'targetClass' => Matches::className(), 'targetAttribute' => ['match_id' => 'id']],
         ];
 }
 
@@ -111,6 +111,6 @@ return [
 	*/
 	public function getMatch()
 	{
-	return $this->hasOne(Matchs::className(), ['id' => 'match_id']);
+	return $this->hasOne(Matches::className(), ['id' => 'match_id']);
 	}
 }

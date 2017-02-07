@@ -20,7 +20,7 @@ use Yii;
 	*
 			* @property PlayerKill $kill
 			* @property Maps $map
-			* @property Matchs $match
+			* @property Matches $match
 	*/
 class Round extends \yii\db\ActiveRecord
 {
@@ -45,7 +45,7 @@ return [
             [['event_name'], 'string', 'max' => 255],
             [['kill_id'], 'exist', 'skipOnError' => true, 'targetClass' => PlayerKill::className(), 'targetAttribute' => ['kill_id' => 'id']],
             [['map_id'], 'exist', 'skipOnError' => true, 'targetClass' => Maps::className(), 'targetAttribute' => ['map_id' => 'id']],
-            [['match_id'], 'exist', 'skipOnError' => true, 'targetClass' => Matchs::className(), 'targetAttribute' => ['match_id' => 'id']],
+            [['match_id'], 'exist', 'skipOnError' => true, 'targetClass' => Matches::className(), 'targetAttribute' => ['match_id' => 'id']],
         ];
 }
 
@@ -89,6 +89,6 @@ return [
 	*/
 	public function getMatch()
 	{
-	return $this->hasOne(Matchs::className(), ['id' => 'match_id']);
+	return $this->hasOne(Matches::className(), ['id' => 'match_id']);
 	}
 }

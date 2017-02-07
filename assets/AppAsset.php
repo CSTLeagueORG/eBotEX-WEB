@@ -22,9 +22,13 @@ class AppAsset extends AssetBundle {
 		'css/font-awesome.min.css',
 	];
 	public $js = [
+		'js/aes.js',
+		'js/raphael-min.js',
+		'js/jquery.tablesorter.min.js',
 	];
 	public $depends = [
 		'yii\web\YiiAsset',
 		'yii\bootstrap\BootstrapAsset',
 	];
+	public $jsOptions = ['position' => \yii\web\View::POS_HEAD];
 }

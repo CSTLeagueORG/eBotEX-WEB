@@ -5,7 +5,7 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "matches".
+ * This is the model class for table "matchs".
  *
  * @property string           $id
  * @property string           $ip
@@ -22,6 +22,8 @@ use Yii;
  * @property string           $score_a
  * @property string           $score_b
  * @property integer          $max_round
+ * @property integer          $tac_pause_max
+ * @property string           $tac_pause_duration
  * @property string           $rules
  * @property string           $overtime_startmoney
  * @property integer          $overtime_max_round
@@ -74,13 +76,13 @@ class Matches extends \yii\db\ActiveRecord {
 			[
 				[
 					'server_id', 'season_id', 'team_a', 'team_b', 'status', 'is_paused', 'score_a', 'score_b',
-					'max_round', 'overtime_startmoney', 'overtime_max_round', 'config_full_score', 'config_ot',
-					'config_streamer', 'config_knife_round', 'config_switch_auto', 'config_auto_change_password',
-					'config_heatmap', 'enable', 'ingame_enable', 'current_map', 'force_zoom_match', 'auto_start',
-					'auto_start_time',
+					'max_round', 'tac_pause_max', 'tac_pause_duration', 'overtime_startmoney', 'overtime_max_round',
+					'config_full_score', 'config_ot', 'config_streamer', 'config_knife_round', 'config_switch_auto',
+					'config_auto_change_password', 'config_heatmap', 'enable', 'ingame_enable', 'current_map',
+					'force_zoom_match', 'auto_start', 'auto_start_time',
 				], 'integer',
 			],
-			[['max_round', 'rules', 'created_at', 'updated_at'], 'required'],
+			[['max_round', 'tac_pause_max', 'tac_pause_duration', 'rules', 'created_at', 'updated_at'], 'required'],
 			[['startdate', 'created_at', 'updated_at'], 'safe'],
 			[['ip', 'config_password'], 'string', 'max' => 50],
 			[['team_a_flag', 'team_b_flag'], 'string', 'max' => 2],
@@ -116,44 +118,46 @@ class Matches extends \yii\db\ActiveRecord {
 	 */
 	public function attributeLabels () {
 		return [
-			'id'                          => 'ID',
-			'ip'                          => 'IP',
-			'server_id'                   => 'Server ID',
-			'season_id'                   => 'Season ID',
-			'team_a'                      => 'Team A',
-			'team_a_flag'                 => 'Team A flag',
-			'team_a_name'                 => 'Team A',
-			'team_b'                      => 'Team B',
-			'team_b_flag'                 => 'Team B flag',
-			'team_b_name'                 => 'Team B',
-			'status'                      => 'Status',
-			'is_paused'                   => 'Is paused',
-			'score_a'                     => 'Team A score',
-			'score_b'                     => 'Team B score',
-			'max_round'                   => 'Max round',
-			'rules'                       => 'Rules',
-			'overtime_startmoney'         => 'Overtime Startmoney',
-			'overtime_max_round'          => 'Overtime Max Round',
-			'config_full_score'           => 'Play all rounds',
-			'config_ot'                   => 'Overtimes',
-			'config_streamer'             => 'Streamer Ready',
-			'config_knife_round'          => 'Knife Round',
-			'config_switch_auto'          => 'Switch Auto',
-			'config_auto_change_password' => 'Auto Change Password',
-			'config_password'             => 'Password',
-			'config_heatmap'              => 'Heatmap',
-			'config_authkey'              => 'Authkey',
-			'enable'                      => 'Enable',
-			'map_selection_mode'          => 'Map Selection Mode',
-			'ingame_enable'               => 'Ingame Enable',
-			'current_map'                 => 'Current Map',
-			'force_zoom_match'            => 'Force Zoom Match',
-			'identifier_id'               => 'Identifier ID',
-			'startdate'                   => 'Startdate',
-			'auto_start'                  => 'Auto Start',
-			'auto_start_time'             => 'Auto Start Time',
-			'created_at'                  => 'Created At',
-			'updated_at'                  => 'Updated At',
+			'id'                          => Yii::t('app', 'ID'),
+			'ip'                          => Yii::t('app', 'Ip'),
+			'server_id'                   => Yii::t('app', 'Server ID'),
+			'season_id'                   => Yii::t('app', 'Season ID'),
+			'team_a'                      => Yii::t('app', 'Team A'),
+			'team_a_flag'                 => Yii::t('app', 'Team A Flag'),
+			'team_a_name'                 => Yii::t('app', 'Team A Name'),
+			'team_b'                      => Yii::t('app', 'Team B'),
+			'team_b_flag'                 => Yii::t('app', 'Team B Flag'),
+			'team_b_name'                 => Yii::t('app', 'Team B Name'),
+			'status'                      => Yii::t('app', 'Status'),
+			'is_paused'                   => Yii::t('app', 'Is Paused'),
+			'score_a'                     => Yii::t('app', 'Score A'),
+			'score_b'                     => Yii::t('app', 'Score B'),
+			'max_round'                   => Yii::t('app', 'Max Round'),
+			'tac_pause_max'               => Yii::t('app', 'Tac Pause Max'),
+			'tac_pause_duration'          => Yii::t('app', 'Tac Pause Duration'),
+			'rules'                       => Yii::t('app', 'Rules'),
+			'overtime_startmoney'         => Yii::t('app', 'Overtime Startmoney'),
+			'overtime_max_round'          => Yii::t('app', 'Overtime Max Round'),
+			'config_full_score'           => Yii::t('app', 'Config Full Score'),
+			'config_ot'                   => Yii::t('app', 'Config Ot'),
+			'config_streamer'             => Yii::t('app', 'Config Streamer'),
+			'config_knife_round'          => Yii::t('app', 'Config Knife Round'),
+			'config_switch_auto'          => Yii::t('app', 'Config Switch Auto'),
+			'config_auto_change_password' => Yii::t('app', 'Config Auto Change Password'),
+			'config_password'             => Yii::t('app', 'Config Password'),
+			'config_heatmap'              => Yii::t('app', 'Config Heatmap'),
+			'config_authkey'              => Yii::t('app', 'Config Authkey'),
+			'enable'                      => Yii::t('app', 'Enable'),
+			'map_selection_mode'          => Yii::t('app', 'Map Selection Mode'),
+			'ingame_enable'               => Yii::t('app', 'Ingame Enable'),
+			'current_map'                 => Yii::t('app', 'Current Map'),
+			'force_zoom_match'            => Yii::t('app', 'Force Zoom Match'),
+			'identifier_id'               => Yii::t('app', 'Identifier ID'),
+			'startdate'                   => Yii::t('app', 'Startdate'),
+			'auto_start'                  => Yii::t('app', 'Auto Start'),
+			'auto_start_time'             => Yii::t('app', 'Auto Start Time'),
+			'created_at'                  => Yii::t('app', 'Created At'),
+			'updated_at'                  => Yii::t('app', 'Updated At'),
 		];
 	}
 
