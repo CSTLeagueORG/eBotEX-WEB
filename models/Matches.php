@@ -19,8 +19,8 @@ use Yii;
  * @property string           $team_b_name
  * @property integer          $status
  * @property integer          $is_paused
- * @property string           $score_a
- * @property string           $score_b
+ * @property integer          $score_a
+ * @property integer          $score_b
  * @property integer          $max_round
  * @property integer          $tac_pause_max
  * @property string           $tac_pause_duration

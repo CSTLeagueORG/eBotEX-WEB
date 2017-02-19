@@ -1,6 +1,6 @@
 <?php
 
-$params = require(__DIR__ . '/params.php');
+$params = require(__DIR__ . '/ebotex.php');
 
 $config = [
 	'id'         => 'basic',
@@ -19,7 +19,7 @@ $config = [
 			'enableAutoLogin' => true,
 		],
 		'errorHandler' => [
-			'errorAction' => 'site/error',
+			'errorAction' => 'main/error',
 		],
 		'mailer'       => [
 			'class'            => 'yii\swiftmailer\Mailer',
@@ -66,7 +66,7 @@ $config = [
 			'enablePrettyUrl' => true,
 			'showScriptName' => false,
 			'rules' => [
-				'login/<service:google|facebook|etc>' => 'site/login',
+				'login/<service:google|facebook|etc>' => 'main/login',
 			],
 		],
 		'eauth' => [
@@ -89,8 +89,9 @@ $config = [
 		/**/
 	],
 	'name' => 'eBotEX',
-	'version' => '1.0',
+	'version' => '0.1',
 	'params'     => $params,
+	'defaultRoute' => 'main',
 ];
 
 if(YII_ENV_DEV) {

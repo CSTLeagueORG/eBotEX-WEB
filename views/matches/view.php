@@ -1,6 +1,6 @@
 <?php
 
-use yii\helpers\Html;
+use yii\bootstrap\Html;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Matches */
@@ -30,10 +30,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
 		<!-- Nav tabs -->
 		<ul class="nav nav-tabs" role="tablist" id="matchTabs">
-			<li role="presentation" class="active"><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab">Overview</a></li>
-			<li role="presentation"><a href="#match-stats" aria-controls="match-stats" role="tab" data-toggle="tab">Match statistics</a></li>
-			<li role="presentation"><a href="#scoreboard" aria-controls="scoreboard" role="tab" data-toggle="tab">Players scoreboard</a></li>
-			<li role="presentation"><a href="#" aria-controls="" role="tab" data-toggle="tab"></a></li>
+			<li role="presentation" class="active"><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab"><?= Yii::t('app', 'Overview') ?></a></li>
+			<li role="presentation"><a href="#match-stats" aria-controls="match-stats" role="tab" data-toggle="tab"><?= Yii::t('app', 'Match statistics') ?></a></li>
+			<li role="presentation"><a href="#scoreboard" aria-controls="scoreboard" role="tab" data-toggle="tab"><?= Yii::t('app', 'Players scoreboard') ?></a></li>
+			<li role="presentation"><a href="#weapon-stats" aria-controls="weapon-stats" role="tab" data-toggle="tab"><?= Yii::t('app', 'Weapon statistics') ?></a></li>
+			<li role="presentation"><a href="#kill-stats" aria-controls="kill-stats" role="tab" data-toggle="tab"><?= Yii::t('app', 'Kills statistics') ?></a></li>
+			<li role="presentation"><a href="#entry-kill-stats" aria-controls="entry-kill-stats" role="tab" data-toggle="tab"><?= Yii::t('app', 'Entry kills') ?></a></li>
+			<li role="presentation"><a href="#demos" aria-controls="demos" role="tab" data-toggle="tab"><?= Yii::t('app', 'Demos') ?></a></li>
+			<li role="presentation"><a href="#" aria-controls="" role="tab" data-toggle="tab"><?= Yii::t('app', '') ?></a></li>
 		</ul>
 
 		<!-- Tab panes -->
@@ -120,6 +124,26 @@ $this->params['breadcrumbs'][] = $this->title;
 			</div>
 			<div role="tabpanel" class="tab-pane" id="scoreboard">
 				<?= $this->render('_scoreboard', [
+					'match' => $model,
+				]) ?>
+			</div>
+			<div role="tabpanel" class="tab-pane" id="weapon-stats">
+				<?= $this->render('_weapon_stats', [
+					'match' => $model,
+				]) ?>
+			</div>
+			<div role="tabpanel" class="tab-pane" id="kill-stats">
+				<?= $this->render('_kill_stats', [
+					'match' => $model,
+				]) ?>
+			</div>
+			<div role="tabpanel" class="tab-pane" id="entry-kill-stats">
+				<?= $this->render('_entry_kills_stats', [
+					'match' => $model,
+				]) ?>
+			</div>
+			<div role="tabpanel" class="tab-pane" id="demos">
+				<?= $this->render('_demos_stats', [
 					'match' => $model,
 				]) ?>
 			</div>

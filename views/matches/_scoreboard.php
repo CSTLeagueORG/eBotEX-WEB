@@ -15,7 +15,7 @@
 	}
 </style>
 
-<h5><i class="icon-fire"></i> <?= Yii::t('app', "Player Statistics"); ?></h5>
+<h5><b><i class="fa fa-fire"></i> <?= Yii::t('app', "Player Statistics"); ?></b></h5>
 
 <table class="table table-striped table-condensed" id="tablePlayers">
 	<thead>

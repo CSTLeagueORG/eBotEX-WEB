@@ -3,7 +3,7 @@ use yii\helpers\Url as Url;
 
 class LoginCest {
 	public function ensureThatLoginWorks (AcceptanceTester $I) {
-		$I->amOnPage(Url::toRoute('/site/login'));
+		$I->amOnPage(Url::toRoute('/main/login'));
 		$I->see('Login', 'h1');
 
 		$I->amGoingTo('try to login with correct credentials');

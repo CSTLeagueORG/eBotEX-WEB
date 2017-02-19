@@ -2,6 +2,7 @@
 
 use app\models\Round;
 use \app\models\PlayerKill;
+use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $match app\models\Matches */
@@ -117,7 +118,7 @@ $size = 450 / ($match->max_round * 2 + 1);
 	<table border="0" cellpadding="5" cellspacing="5" width="100%">
 		<tr>
 			<td width="50%" valign="top">
-				<h5><i class="icon-hand-right"></i> <?= Yii::t('app', "Match Statistics"); ?></h5>
+				<h5><b><i class="fa fa-hand-o-right"></i> <?= Yii::t('app', "Match Statistics"); ?></b></h5>
 
 				<table class="table">
 					<tr>
@@ -207,7 +208,7 @@ $size = 450 / ($match->max_round * 2 + 1);
 	<hr/>
 
 <?php if (count($rounds) > 0): ?>
-	<h5><i class="icon-leaf"></i> <?= Yii::t('app', "Round Details"); ?></h5>
+	<h5><b><i class="fa fa-leaf"></i> <?= Yii::t('app', "Round Details"); ?></b></h5>
 	<hr/>
 
 	<script>
@@ -411,9 +412,9 @@ $size = 450 / ($match->max_round * 2 + 1);
 													</td>
 
 													<td width="100">
-														<?// echo image_tag("/images/kills/csgo/" . $kill->getWeapon(), array("class" => "needTips", "title" => $kill->getWeapon())); ?>
+														<?= Html::img(Yii::$app->urlManager->createAbsoluteUrl("images/kills/csgo/" . $kill->weapon . ".png"), array("class" => "needTips", "title" => $kill->weapon)); ?>
 														<?php if ($kill->headshot): ?>
-															<?// echo image_tag("/images/kills/csgo/headshot.png"); ?>
+															<?= Html::img(Yii::$app->urlManager->createAbsoluteUrl("images/kills/csgo/headshot.png")); ?>
 														<?php endif; ?>
 													</td>
 
