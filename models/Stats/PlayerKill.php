@@ -1,6 +1,10 @@
 <?php
 
-namespace app\models;
+namespace app\models\Stats;
+
+use app\models\Matches\Matches;
+use app\models\Matches\Maps;
+use app\models\Matches\Round;
 
 use Yii;
 

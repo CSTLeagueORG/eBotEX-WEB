@@ -1,11 +1,11 @@
 <?php
 
-use app\models\Round;
-use \app\models\PlayerKill;
+use app\models\Matches\Round;
+use \app\models\Stats\PlayerKill;
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $match app\models\Matches */
+/* @var $match app\models\Matches\Matches */
 ?>
 <h5><b><i class="fa fa-fire"></i> <?= Yii::t('app',"Killer / Killed"); ?></b></h5>
 

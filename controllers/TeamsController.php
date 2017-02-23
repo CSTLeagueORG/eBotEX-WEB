@@ -3,8 +3,8 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Teams;
-use app\models\TeamsSearch;
+use app\models\Teams\Teams;
+use app\models\Teams\TeamsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;

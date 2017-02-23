@@ -1,7 +1,7 @@
 <?php
 
 /* @var $this yii\web\View */
-/* @var $match app\models\Matches */
+/* @var $match app\models\Matches\Matches */
 ?>
 <script>
 	$(function() {

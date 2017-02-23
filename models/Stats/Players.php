@@ -1,6 +1,11 @@
 <?php
 
-namespace app\models;
+namespace app\models\Stats;
+
+use app\models\Matches\Matches;
+use app\models\Matches\Maps;
+use app\models\Matches\RoundSummary;
+use app\models\Matches\PlayersSnapshot;
 
 use Yii;
 

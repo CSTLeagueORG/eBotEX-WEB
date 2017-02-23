@@ -1,24 +1,29 @@
 <?php
-use app\models\RoundSummary;
-use app\models\PlayerKill;
+use app\models\Matches\RoundSummary;
+use app\models\Stats\PlayerKill;
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $match app\models\Matches */
+/* @var $match app\models\Matches\Matches */
 $players = array();
 
 $statsRounds = array();
 
 $weapons = array();
 
+$players = array();
+$players2 = array();
+
+$teams = array();
+
 $rounds = RoundSummary::find()->where(["match_id" => $match->id])->orderBy("round_id")->all();
 foreach($rounds as $round) {
-	/* @var $round app\models\RoundSummary */
+	/* @var $round app\models\Matches\RoundSummary */
 	$kill = PlayerKill::find()->where([
 		"match_id" => $match->id, "round_id" => $round->round_id,
 	])->orderBy("created_at")->one();
 	if($kill) {
-		/* @var $kill app\models\PlayerKill */
+		/* @var $kill app\models\Stats\PlayerKill */
 		$team = $kill->killer_team == "CT"? "ct" : "t";
 		$team_killed = $kill->killed_team == "CT"? "ct" : "t";
 		if(!isset($weapons[$kill->weapon])) $weapons[$kill->weapon] = 0;

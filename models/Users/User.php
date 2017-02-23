@@ -1,8 +1,8 @@
 <?php
 
-namespace app\models;
+namespace app\models\Users;
 
-use app\models\Users;
+use app\models\Users\Users;
 
 class User extends \yii\base\Object implements \yii\web\IdentityInterface {
 	public $id;

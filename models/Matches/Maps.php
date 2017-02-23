@@ -1,6 +1,9 @@
 <?php
 
-namespace app\models;
+namespace app\models\Matches;
+use app\models\Stats\Players;
+use app\models\Stats\PlayerKill;
+use app\models\Stats\PlayersHeatmap;
 
 use Yii;
 

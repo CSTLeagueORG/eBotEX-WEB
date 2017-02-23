@@ -1,6 +1,9 @@
 <?php
 
-namespace app\models;
+namespace app\models\Stats;
+
+use app\models\Matches\Matches;
+use app\models\Matches\Maps;
 
 use Yii;
 
@@ -30,7 +33,7 @@ use Yii;
 	*
 			* @property Players $attacker
 			* @property Maps $map
-			* @property Matchs $match
+			* @property Matches $match
 			* @property Players $player
 	*/
 class PlayersHeatmap extends \yii\db\ActiveRecord

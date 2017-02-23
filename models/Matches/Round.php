@@ -1,8 +1,9 @@
 <?php
 
-namespace app\models;
+namespace app\models\Matches;
 
 use Yii;
+use app\models\Stats\PlayerKill;
 
 /**
 * This is the model class for table "round".

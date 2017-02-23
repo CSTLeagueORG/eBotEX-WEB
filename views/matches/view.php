@@ -3,7 +3,7 @@
 use yii\bootstrap\Html;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Matches */
+/* @var $model app\models\Matches\Matches */
 
 $this->title = Yii::t('app', 'Match #') . $model->id . " " . (($model->teamA)? $model->teamA->name : $model->team_a_name) . ' vs ' . (($model->teamB)? $model->teamB->name : $model->team_b_name);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Matches'), 'url' => ['index']];

@@ -3,8 +3,8 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Players;
-	use app\models\PlayersSearch;
+use app\models\Stats\Players;
+use app\models\Stats\PlayersSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;

@@ -1,11 +1,11 @@
 <?php
 
-namespace app\models;
+namespace app\models\Stats;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Players;
+use app\models\Stats\Players;
 
 /**
 * PlayersSearch represents the model behind the search form about `app\models\Players`.

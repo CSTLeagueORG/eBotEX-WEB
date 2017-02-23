@@ -1,6 +1,8 @@
 <?php
 
-namespace app\models;
+namespace app\models\Servers;
+
+use app\models\Matches\Matches;
 
 use Yii;
 

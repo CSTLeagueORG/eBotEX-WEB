@@ -1,6 +1,7 @@
 <?php
 
 $params = require(__DIR__ . '/ebotex.php');
+$main_config = require(__DIR__ . '/config.php');
 
 $config = [
 	'id'         => 'basic',
@@ -15,7 +16,7 @@ $config = [
 			'class' => 'yii\caching\FileCache',
 		],
 		'user'         => [
-			'identityClass'   => 'app\models\User',
+			'identityClass'   => 'app\models\Users\User',
 			'enableAutoLogin' => true,
 		],
 		'errorHandler' => [
@@ -82,7 +83,7 @@ $config = [
 				'steam' => [
 					'class' => 'nodge\eauth\services\SteamOpenIDService',
 					//'realm' => '*.example.org', // your domain, can be with wildcard to authenticate on subdomains.
-					'apiKey' => '...', // Optional. You can get it here: https://steamcommunity.com/dev/apikey
+					'apiKey' => $main_config['api_key'], // Optional. You can get it here: https://steamcommunity.com/dev/apikey
 				],
 			],
 		],

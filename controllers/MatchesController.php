@@ -3,8 +3,8 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Matches;
-use app\models\MatchesSearch;
+use app\models\Matches\Matches;
+use app\models\Matches\MatchesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;

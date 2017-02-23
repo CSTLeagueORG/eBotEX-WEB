@@ -1,23 +1,23 @@
 <?php
 
-namespace app\models;
+namespace app\models\Servers;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Seasons;
+use app\models\Servers\Servers;
 
 /**
- * SeasonsSearch represents the model behind the search form about `app\models\Seasons`.
+ * ServersSearch represents the model behind the search form about `app\models\Servers`.
  */
-class SeasonsSearch extends Seasons {
+class ServersSearch extends Servers {
 	/**
 	 * @inheritdoc
 	 */
 	public function rules () {
 		return [
-			[['id', 'active'], 'integer'],
-			[['name', 'event', 'start', 'end', 'link', 'logo', 'created_at', 'updated_at'], 'safe'],
+			[['id'], 'integer'],
+			[['ip', 'rcon', 'hostname', 'tv_ip', 'created_at', 'updated_at'], 'safe'],
 		];
 	}
 
@@ -37,7 +37,7 @@ class SeasonsSearch extends Seasons {
 	 * @return ActiveDataProvider
 	 */
 	public function search ($params) {
-		$query = Seasons::find();
+		$query = Servers::find();
 
 // add conditions that should always apply here
 
@@ -56,17 +56,14 @@ class SeasonsSearch extends Seasons {
 // grid filtering conditions
 		$query->andFilterWhere([
 			'id'         => $this->id,
-			'start'      => $this->start,
-			'end'        => $this->end,
-			'active'     => $this->active,
 			'created_at' => $this->created_at,
 			'updated_at' => $this->updated_at,
 		]);
 
-		$query->andFilterWhere(['like', 'name', $this->name])
-			->andFilterWhere(['like', 'event', $this->event])
-			->andFilterWhere(['like', 'link', $this->link])
-			->andFilterWhere(['like', 'logo', $this->logo]);
+		$query->andFilterWhere(['like', 'ip', $this->ip])
+			->andFilterWhere(['like', 'rcon', $this->rcon])
+			->andFilterWhere(['like', 'hostname', $this->hostname])
+			->andFilterWhere(['like', 'tv_ip', $this->tv_ip]);
 
 		return $dataProvider;
 	}

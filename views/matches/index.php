@@ -4,9 +4,11 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
 use yii\helpers\Url;
+use \app\models\Matches\Matches;
+use \app\models\Teams\Teams;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\MatchesSearch */
+/* @var $searchModel app\models\Matches\MatchesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = Yii::t('app', 'Matches');
@@ -30,28 +32,28 @@ $this->params['breadcrumbs'][] = $this->title;
 				'format'    => 'raw',
 				'contentOptions' => ['class' => 'text-center'],
 				'headerOptions' => ['class' => 'text-center'],
-				'value'     => function (\app\models\Matches $model) {
+				'value'     => function (Matches $model) {
 					return '<span class="' . (($model->currentMap->current_side == 'ct')? 'text-primary' : 'text-warning') . '">' . (($model->teamA)? $model->teamA->name : $model->team_a_name) . '</span> ' . ((strlen($model->team_a_flag) == 2)? '<img src="blank.gif" class="teamflag teamflag-' . strtolower($model->team_a_flag) . '" alt="" /> ' : '') . '<span class="' . (($model->score_a <= $model->score_b)? ($model->score_a == $model->score_b)? '' : 'text-danger' : 'text-success') . '">' . $model->score_a . '</span> — <span class="' . (($model->score_b <= $model->score_a)? ($model->score_a == $model->score_b)? '' : 'text-danger' : 'text-success') . '">' . $model->score_b . '</span>' . ((strlen($model->team_b_flag) == 2)? ' <img src="blank.gif" class="teamflag teamflag-' . strtolower($model->team_b_flag) . '" alt="" />' : '') . ' <span class="' . (($model->currentMap->current_side == 'ct')? 'text-warning' : 'text-primary') . '">' . (($model->teamB)? $model->teamB->name : $model->team_b_name) . '</span>';
 				},
 			],
 			[
 				'attribute' => Yii::t('app', 'Connect link'),
 				'format'    => 'raw',
-				'value'     => function (\app\models\Matches $model) {
+				'value'     => function (Matches $model) {
 					return "<a href=\"steam://connect/{$model->ip}/{$model->config_password}\">{$model->server->hostname}</a>";
 				},
 			],
 			[
 				'attribute' => Yii::t('app', 'Season'),
 				'format'    => 'raw',
-				'value'     => function (\app\models\Matches $model) {
+				'value'     => function (Matches $model) {
 					return ($model->season)? $model->season->name : Yii::t('app', 'Not defined');
 				},
 			],
 			[
 				'attribute' => Yii::t('app', 'Status'),
 				'format'    => 'raw',
-				'value'     => function (\app\models\Matches $model) {
+				'value'     => function (Matches $model) {
 					$result = '';
 					if(($model->status == 0 or $model->status == 13 or !$model->enable) and $model->status != 14) {
 						$result = "<div class='label label-danger'><i class='glyphicon glyphicon-flag'></i></div> ";
@@ -114,7 +116,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			[
 				'attribute' => Yii::t('app', 'Actions'),
 				'format'    => 'raw',
-				'value'     => function (\app\models\Matches $model) {
+				'value'     => function (Matches $model) {
 					$result = '';
 					$url = Url::toRoute(['matches/view','id'=> (string) $model->id]);
 					$result .= "

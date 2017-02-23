@@ -3,8 +3,8 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Seasons;
-use app\models\SeasonsSearch;
+use app\models\Seasons\Seasons;
+use app\models\Seasons\SeasonsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;

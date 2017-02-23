@@ -1,6 +1,9 @@
 <?php
 
-namespace app\models;
+namespace app\models\Teams;
+
+use app\models\Matches\Matches;
+use app\models\Teams\TeamsInSeasons;
 
 use Yii;
 

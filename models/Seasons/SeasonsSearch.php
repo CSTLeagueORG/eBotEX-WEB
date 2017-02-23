@@ -1,23 +1,23 @@
 <?php
 
-namespace app\models;
+namespace app\models\Seasons;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Teams;
+use app\models\Seasons\Seasons;
 
 /**
- * TeamsSearch represents the model behind the search form about `app\models\Teams`.
+ * SeasonsSearch represents the model behind the search form about `app\models\Seasons`.
  */
-class TeamsSearch extends Teams {
+class SeasonsSearch extends Seasons {
 	/**
 	 * @inheritdoc
 	 */
 	public function rules () {
 		return [
-			[['id'], 'integer'],
-			[['name', 'shorthandle', 'flag', 'link', 'created_at', 'updated_at'], 'safe'],
+			[['id', 'active'], 'integer'],
+			[['name', 'event', 'start', 'end', 'link', 'logo', 'created_at', 'updated_at'], 'safe'],
 		];
 	}
 
@@ -37,7 +37,7 @@ class TeamsSearch extends Teams {
 	 * @return ActiveDataProvider
 	 */
 	public function search ($params) {
-		$query = Teams::find();
+		$query = Seasons::find();
 
 // add conditions that should always apply here
 
@@ -56,14 +56,17 @@ class TeamsSearch extends Teams {
 // grid filtering conditions
 		$query->andFilterWhere([
 			'id'         => $this->id,
+			'start'      => $this->start,
+			'end'        => $this->end,
+			'active'     => $this->active,
 			'created_at' => $this->created_at,
 			'updated_at' => $this->updated_at,
 		]);
 
 		$query->andFilterWhere(['like', 'name', $this->name])
-			->andFilterWhere(['like', 'shorthandle', $this->shorthandle])
-			->andFilterWhere(['like', 'flag', $this->flag])
-			->andFilterWhere(['like', 'link', $this->link]);
+			->andFilterWhere(['like', 'event', $this->event])
+			->andFilterWhere(['like', 'link', $this->link])
+			->andFilterWhere(['like', 'logo', $this->logo]);
 
 		return $dataProvider;
 	}

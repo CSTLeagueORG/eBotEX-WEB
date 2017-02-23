@@ -1,23 +1,23 @@
 <?php
 
-namespace app\models;
+namespace app\models\Teams;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Servers;
+use app\models\Teams\Teams;
 
 /**
- * ServersSearch represents the model behind the search form about `app\models\Servers`.
+ * TeamsSearch represents the model behind the search form about `app\models\Teams`.
  */
-class ServersSearch extends Servers {
+class TeamsSearch extends Teams {
 	/**
 	 * @inheritdoc
 	 */
 	public function rules () {
 		return [
 			[['id'], 'integer'],
-			[['ip', 'rcon', 'hostname', 'tv_ip', 'created_at', 'updated_at'], 'safe'],
+			[['name', 'shorthandle', 'flag', 'link', 'created_at', 'updated_at'], 'safe'],
 		];
 	}
 
@@ -37,7 +37,7 @@ class ServersSearch extends Servers {
 	 * @return ActiveDataProvider
 	 */
 	public function search ($params) {
-		$query = Servers::find();
+		$query = Teams::find();
 
 // add conditions that should always apply here
 
@@ -60,10 +60,10 @@ class ServersSearch extends Servers {
 			'updated_at' => $this->updated_at,
 		]);
 
-		$query->andFilterWhere(['like', 'ip', $this->ip])
-			->andFilterWhere(['like', 'rcon', $this->rcon])
-			->andFilterWhere(['like', 'hostname', $this->hostname])
-			->andFilterWhere(['like', 'tv_ip', $this->tv_ip]);
+		$query->andFilterWhere(['like', 'name', $this->name])
+			->andFilterWhere(['like', 'shorthandle', $this->shorthandle])
+			->andFilterWhere(['like', 'flag', $this->flag])
+			->andFilterWhere(['like', 'link', $this->link]);
 
 		return $dataProvider;
 	}
