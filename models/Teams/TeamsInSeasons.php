@@ -34,11 +34,13 @@ class TeamsInSeasons extends \yii\db\ActiveRecord {
 			[['season_id', 'team_id'], 'integer'],
 			[['created_at', 'updated_at'], 'required'],
 			[['created_at', 'updated_at'], 'safe'],
-			[['season_id'], 'exist', 'skipOnError'     => true, 'targetClass' => Seasons::className(),
-			                         'targetAttribute' => ['season_id' => 'id'],
+			[
+				['season_id'], 'exist', 'skipOnError'     => true, 'targetClass' => Seasons::className(),
+				                        'targetAttribute' => ['season_id' => 'id'],
 			],
-			[['team_id'], 'exist', 'skipOnError'     => true, 'targetClass' => Teams::className(),
-			                       'targetAttribute' => ['team_id' => 'id'],
+			[
+				['team_id'], 'exist', 'skipOnError'     => true, 'targetClass' => Teams::className(),
+				                      'targetAttribute' => ['team_id' => 'id'],
 			],
 		];
 	}

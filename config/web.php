@@ -4,10 +4,10 @@ $params = require(__DIR__ . '/ebotex.php');
 $main_config = require(__DIR__ . '/config.php');
 
 $config = [
-	'id'         => 'basic',
-	'basePath'   => dirname(__DIR__),
-	'bootstrap'  => ['log'],
-	'components' => [
+	'id'           => 'basic',
+	'basePath'     => dirname(__DIR__),
+	'bootstrap'    => ['log'],
+	'components'   => [
 		'request'      => [
 			// !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
 			'cookieValidationKey' => '0LKfUWRrzKu3VvtolIdClyGn4tBiI3Y_',
@@ -37,17 +37,17 @@ $config = [
 					'levels' => ['error', 'warning'],
 				],
 				[
-					'class' => 'yii\log\FileTarget',
-					'logFile' => '@app/runtime/logs/eauth.log',
+					'class'      => 'yii\log\FileTarget',
+					'logFile'    => '@app/runtime/logs/eauth.log',
 					'categories' => ['nodge\eauth\*'],
-					'logVars' => [],
+					'logVars'    => [],
 				],
 			],
 		],
 		'db'           => require(__DIR__ . '/db.php'),
 		'i18n'         => [
 			'translations' => [
-				'app*' => [
+				'app*'  => [
 					'class'          => 'yii\i18n\PhpMessageSource',
 					'basePath'       => '@app/messages',
 					'sourceLanguage' => 'en',
@@ -57,7 +57,7 @@ $config = [
 					],
 				],
 				'eauth' => [
-					'class' => 'yii\i18n\PhpMessageSource',
+					'class'    => 'yii\i18n\PhpMessageSource',
 					'basePath' => '@eauth/messages',
 				],
 			],
@@ -65,33 +65,36 @@ $config = [
 
 		'urlManager' => [
 			'enablePrettyUrl' => true,
-			'showScriptName' => false,
-			'rules' => [
+			'showScriptName'  => false,
+			'rules'           => [
 				'login/<service:google|facebook|etc>' => 'main/login',
+				'matches/view/<id:\d+>' => 'matches/view',
 			],
 		],
-		'eauth' => [
-			'class' => 'nodge\eauth\EAuth',
-			'popup' => true, // Use the popup window instead of redirecting.
-			'cache' => false, // Cache component name or false to disable cache. Defaults to 'cache' on production environments.
+		'eauth'      => [
+			'class'       => 'nodge\eauth\EAuth',
+			'popup'       => true, // Use the popup window instead of redirecting.
+			'cache'       => false,
+			// Cache component name or false to disable cache. Defaults to 'cache' on production environments.
 			'cacheExpire' => 0, // Cache lifetime. Defaults to 0 - means unlimited.
-			'httpClient' => [
+			'httpClient'  => [
 				// uncomment this to use streams in safe_mode
 				//'useStreamsFallback' => true,
 			],
-			'services' => [ // You can change the providers and their classes.
+			'services'    => [ // You can change the providers and their classes.
 				'steam' => [
-					'class' => 'nodge\eauth\services\SteamOpenIDService',
+					'class'  => 'nodge\eauth\services\SteamOpenIDService',
 					//'realm' => '*.example.org', // your domain, can be with wildcard to authenticate on subdomains.
-					'apiKey' => $main_config['api_key'], // Optional. You can get it here: https://steamcommunity.com/dev/apikey
+					'apiKey' => $main_config['api_key'],
+					// Optional. You can get it here: https://steamcommunity.com/dev/apikey
 				],
 			],
 		],
 		/**/
 	],
-	'name' => 'eBotEX',
-	'version' => '0.1',
-	'params'     => $params,
+	'name'         => 'eBotEX',
+	'version'      => '0.1',
+	'params'       => $params,
 	'defaultRoute' => 'main',
 ];
 

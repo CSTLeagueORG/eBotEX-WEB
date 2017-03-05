@@ -22,6 +22,46 @@ AppAsset::register($this);
 	<?php $this->head() ?>
 </head>
 <body>
+<script>
+	function submitForm (id) {
+		$("#"+id).submit();
+	}
+
+	var socketIoAddress = "<?php echo Yii::$app->params['bot_ip'] ?>:<?php echo Yii::$app->params["bot_port"]; ?>";
+	var socket = null;
+	var socketIoLoaded = false;
+	var loadingSocketIo = false;
+	var callbacks = new Array();
+	function initSocketIo(callback) {
+		callbacks.push(callback);
+		if (loadingSocketIo) {
+			return;
+		}
+
+		if (socketIoLoaded) {
+			if (typeof callback == "function") {
+				callback(socket);
+			}
+			return;
+		}
+
+		loadingSocketIo = true;
+		$.getScript("http://"+socketIoAddress+"/socket.io/socket.io.js", function(){
+			socket = io.connect("http://"+socketIoAddress);
+			socket.on('connect', function(){
+				socketIoLoaded = true;
+				loadingSocketIo = false;
+				if (typeof callback == "function") {
+					callback(socket);
+				}
+				for (var c in callbacks) {
+					callbacks[c](socket);
+				}
+				//callbacks = new Array();
+			});
+		});
+	}
+</script>
 <?php $this->beginBody() ?>
 
 <div class="wrap">
@@ -62,38 +102,89 @@ AppAsset::register($this);
 		<div class="row">
 			<div class="col-md-2">
 				<div class="panel panel-default">
-					<script>
-						function goToMatch() {
-							var id = $("#match_id_go").val();
-							if (id > 0)
-								document.location.href = "<?= Yii::$app->urlManager->createAbsoluteUrl("/matches/view/?id="); ?>" + id;
-						}
-					</script>
-					<?= Nav::widget([
-						'options' => ['class' => 'nav nav-pills nav-stacked'],
-						'items'   => [
-							['label' => 'Home', 'url' => ['/main/index']],
-							('
+					<div class="panel-body">
+						<script>
+							function goToMatch() {
+								var id = $("#match_id_go").val();
+								if (id > 0)
+									document.location.href = "<?= Yii::$app->urlManager->createAbsoluteUrl("/matches/view/?id="); ?>" + id;
+							}
+
+							function ebotSound(parameter) {
+								if (parameter == "on") {
+									$('div#ebotSound').html('<font color="green"><b>Sound On <a href="#" onclick="ebotSound(\'off\');">(Turn Off)</a></b></font>');
+									setSessionStorageValue('sound', 'on');
+								} else if (parameter == "off") {
+									$('div#ebotSound').html('<font color="red"><b>Sound Off <a href="#" onclick="ebotSound(\'on\');">(Turn On)</a></b></font>');
+									setSessionStorageValue('sound', 'off');
+								}
+							}
+
+							$(document).ready(function() {
+								initSocketIo(function(socket) {
+									$('div#websocketAlive').html('<font color="green"><b>WebSocket online</b></font>');
+									socket.on('connect', function() {
+										$('div#websocketAlive').html('<font color="green"><b>WebSocket online</b></font>');
+									});
+									socket.emit("identify", { type: "alive" } );
+									socket.on("aliveHandler", function (data) {
+										if (data.data == "__isAlive__") {
+											$('div#ebotAlive').html('<font color="green"><b>eBot online</b></font>');
+										}
+									});
+									socket.on('disconnect', function(){
+										$('div#websocketAlive').html('<font color="red"><b>WebSocket offline</b></font>');
+										$('div#ebotAlive').html('<font color="red"><b>eBot offline</b></font>');
+									});
+								});
+
+								if (getSessionStorageValue('sound') == null) {
+									setSessionStorageValue('sound', 'on');
+								}
+
+								if (getSessionStorageValue('sound') == 'on') {
+									$('div#ebotSound').html('<font color="green"><b>Sound On <a href="#" onclick="ebotSound(\'off\');">(Turn Off)</a></b></font>');
+								} else if (getSessionStorageValue('sound') == 'off') {
+									$('div#ebotSound').html('<font color="red"><b>Sound Off <a href="#" onclick="ebotSound(\'on\');">(Turn On)</a></b></font>');
+								}
+							});
+						</script>
+						<?= Nav::widget([
+							'options' => ['class' => 'nav nav-pills nav-stacked'],
+							'items'   => [
+								['label' => 'Home', 'url' => ['/main/index']],
+								('
 								<li>
 									<div class="input-group" style="margin: 5px;">
-										<input class="form-control" id="match_id_go" size="16" type="text" placeholder="' . Yii::t('app',"Match id") . '">
+										<input class="form-control" id="match_id_go" size="16" type="text" placeholder="' . Yii::t('app', "Match id") . '">
 										<span class="input-group-btn">
-											<button class="btn btn-default" type="button" onclick="goToMatch();">' . Yii::t('app',"Go") . '</button>
+											<button class="btn btn-default" type="button" onclick="goToMatch();">' . Yii::t('app', "Go") . '</button>
 										</span>
 									</div>
 								</li>
 							'),
-							['label' => 'Matches', 'url' => ['/matches/index']],
-							['label' => 'Seasons', 'url' => ['/seasons/index']],
-							['label' => 'Statistics', 'url' => ['/stats']],
-							['label' => 'Global statistics', 'url' => ['/stats/global']],
-							['label' => 'Statistics by map', 'url' => ['/stats/map']],
-							['label' => 'Statistics by weapon', 'url' => ['/stats/weapon']],
-							['label' => 'Ingame Help', 'url' => ['/main/ingame']],
-						],
-					]);
-					?>
+								['label' => 'Matches', 'url' => ['/matches/index']],
+								['label' => 'Seasons', 'url' => ['/seasons/index']],
+								['label' => 'Statistics', 'url' => ['/stats']],
+								['label' => 'Global statistics', 'url' => ['/stats/global']],
+								['label' => 'Statistics by map', 'url' => ['/stats/map']],
+								['label' => 'Statistics by weapon', 'url' => ['/stats/weapon']],
+								['label' => 'Ingame Help', 'url' => ['/main/ingame']],
+							],
+						]);
+						?>
+					</div>
 				</div>
+				<? if (!Yii::$app->user->isGuest and  Yii::$app->user->identity->isAdmin): ?>
+					<div class="panel panel-primary">
+						<div class="panel-heading">Websocket status</div>
+						<div class="panel-body">
+							<div id="websocketAlive"><?= Yii::t('app',"Loading"); ?></div>
+							<div id="ebotAlive"><?= Yii::t('app',"Loading"); ?></div>
+							<div id="ebotSound"><?= Yii::t('app',"Loading"); ?></div>
+						</div>
+					</div>
+				<? endif ?>
 			</div>
 			<div class="col-md-10">
 				<?= Breadcrumbs::widget([

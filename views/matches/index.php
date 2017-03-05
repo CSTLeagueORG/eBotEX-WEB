@@ -28,12 +28,12 @@ $this->params['breadcrumbs'][] = $this->title;
 		'columns'      => [
 			'id',
 			[
-				'attribute' => Yii::t('app', 'Teams and score'),
-				'format'    => 'raw',
+				'attribute'      => Yii::t('app', 'Teams and score'),
+				'format'         => 'raw',
 				'contentOptions' => ['class' => 'text-center'],
-				'headerOptions' => ['class' => 'text-center'],
-				'value'     => function (Matches $model) {
-					return '<span class="' . (($model->currentMap->current_side == 'ct')? 'text-primary' : 'text-warning') . '">' . (($model->teamA)? $model->teamA->name : $model->team_a_name) . '</span> ' . ((strlen($model->team_a_flag) == 2)? '<img src="blank.gif" class="teamflag teamflag-' . strtolower($model->team_a_flag) . '" alt="" /> ' : '') . '<span class="' . (($model->score_a <= $model->score_b)? ($model->score_a == $model->score_b)? '' : 'text-danger' : 'text-success') . '">' . $model->score_a . '</span> — <span class="' . (($model->score_b <= $model->score_a)? ($model->score_a == $model->score_b)? '' : 'text-danger' : 'text-success') . '">' . $model->score_b . '</span>' . ((strlen($model->team_b_flag) == 2)? ' <img src="blank.gif" class="teamflag teamflag-' . strtolower($model->team_b_flag) . '" alt="" />' : '') . ' <span class="' . (($model->currentMap->current_side == 'ct')? 'text-warning' : 'text-primary') . '">' . (($model->teamB)? $model->teamB->name : $model->team_b_name) . '</span>';
+				'headerOptions'  => ['class' => 'text-center'],
+				'value'          => function (Matches $model) {
+					return '<span class="' . (($model->currentMap->current_side == 'ct')? 'text-primary' : 'text-warning') . '">' . (($model->teamA)? $model->teamA->name : $model->team_a_name) . '</span> ' . ((strlen($model->team_a_flag) == 2)? '<i class="teamflag teamflag-' . strtolower($model->team_a_flag) . '"></i> ' : '') . '<span class="' . (($model->score_a <= $model->score_b)? ($model->score_a == $model->score_b)? '' : 'text-danger' : 'text-success') . '">' . $model->score_a . '</span> — <span class="' . (($model->score_b <= $model->score_a)? ($model->score_a == $model->score_b)? '' : 'text-danger' : 'text-success') . '">' . $model->score_b . '</span>' . ((strlen($model->team_b_flag) == 2)? ' <i class="teamflag teamflag-' . strtolower($model->team_b_flag) . '"></i>' : '') . ' <span class="' . (($model->currentMap->current_side == 'ct')? 'text-warning' : 'text-primary') . '">' . (($model->teamB)? $model->teamB->name : $model->team_b_name) . '</span>';
 				},
 			],
 			[
@@ -118,54 +118,54 @@ $this->params['breadcrumbs'][] = $this->title;
 				'format'    => 'raw',
 				'value'     => function (Matches $model) {
 					$result = '';
-					$url = Url::toRoute(['matches/view','id'=> (string) $model->id]);
+					$url = Url::toRoute(['matches/view', 'id' => (string) $model->id]);
 					$result .= "
 							<a href='$url'><i class='fa fa-eye'></i></a>
 						";
 					if($model->status < 13 and !$model->enable) {
-						$url = Url::toRoute(['matches/play','id'=> (string) $model->id]);
+						$url = Url::toRoute(['matches/play', 'id' => (string) $model->id]);
 						$result .= "
 							<a href='$url'><i class='fa fa-play'></i></a>
 						";
 					}
 					if($model->enable and $model->is_paused) {
-						$url = Url::toRoute(['matches/unpause','id'=> (string) $model->id]);
+						$url = Url::toRoute(['matches/unpause', 'id' => (string) $model->id]);
 						$result .= "
 							<a href='$url'><i class='fa fa-play'></i></a>
 						";
 					}
 					if($model->enable and !$model->ingame_enable) {
-						$url = Url::toRoute(['matches/continue','id'=> (string) $model->id]);
+						$url = Url::toRoute(['matches/continue', 'id' => (string) $model->id]);
 						$result .= "
 							<a href='$url'><i class='fa fa-play'></i></a>
 						";
 					}
 					if($model->enable and !$model->is_paused) {
-						$url = Url::toRoute(['matches/pause','id'=> (string) $model->id]);
+						$url = Url::toRoute(['matches/pause', 'id' => (string) $model->id]);
 						$result .= "
 							<a href='$url'><i class='fa fa-pause'></i></a>
 						";
 					}
 					if($model->enable) {
-						$url = Url::toRoute(['matches/stop','id'=> (string) $model->id]);
+						$url = Url::toRoute(['matches/stop', 'id' => (string) $model->id]);
 						$result .= "
 							<a href='$url'><i class='fa fa-stop'></i></a>
 						";
 					}
 					if(!$model->enable and $model->status < 2) {
-						$url = Url::toRoute(['matches/update','id'=> (string) $model->id]);
+						$url = Url::toRoute(['matches/update', 'id' => (string) $model->id]);
 						$result .= "
 							<a href='$url'><i class='fa fa-edit'></i></a>
 						";
 					}
 					if(!$model->enable and $model->status == 13) {
-						$url = Url::toRoute(['matches/archive','id'=> (string) $model->id]);
+						$url = Url::toRoute(['matches/archive', 'id' => (string) $model->id]);
 						$result .= "
 							<a href='$url'><i class='fa fa-archive'></i></a>
 						";
 					}
 					if(!$model->enable) {
-						$url = Url::toRoute(['matches/delete','id'=> (string) $model->id]);
+						$url = Url::toRoute(['matches/delete', 'id' => (string) $model->id]);
 						$result .= "
 							<a href='$url'><i class='fa fa-trash'></i></a>
 						";

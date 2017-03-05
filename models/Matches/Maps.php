@@ -1,6 +1,7 @@
 <?php
 
 namespace app\models\Matches;
+
 use app\models\Stats\Players;
 use app\models\Stats\PlayerKill;
 use app\models\Stats\PlayersHeatmap;
@@ -51,8 +52,9 @@ class Maps extends \yii\db\ActiveRecord {
 			[['created_at', 'updated_at'], 'safe'],
 			[['map_name'], 'string', 'max' => 50],
 			[['current_side', 'maps_for', 'tv_record_file'], 'string', 'max' => 255],
-			[['match_id'], 'exist', 'skipOnError'     => true, 'targetClass' => Matches::className(),
-			                        'targetAttribute' => ['match_id' => 'id'],
+			[
+				['match_id'], 'exist', 'skipOnError'     => true, 'targetClass' => Matches::className(),
+				                       'targetAttribute' => ['match_id' => 'id'],
 			],
 		];
 	}

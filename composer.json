@@ -15,7 +15,8 @@
     "yiisoft/yii2": "~2.0.5",
     "yiisoft/yii2-bootstrap": "~2.0.0",
     "yiisoft/yii2-swiftmailer": "~2.0.0",
-    "nodge/yii2-eauth": "2.4.1"
+    "nodge/yii2-eauth": "2.4.1",
+    "kartik-v/yii2-tabs-x": "v1.2.3"
   },
   "require-dev": {
     "yiisoft/yii2-debug": "~2.0.0",

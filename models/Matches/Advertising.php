@@ -35,8 +35,9 @@ class Advertising extends \yii\db\ActiveRecord {
 			[['message'], 'string'],
 			[['created_at', 'updated_at'], 'required'],
 			[['created_at', 'updated_at'], 'safe'],
-			[['season_id'], 'exist', 'skipOnError'     => true, 'targetClass' => Seasons::className(),
-			                         'targetAttribute' => ['season_id' => 'id'],
+			[
+				['season_id'], 'exist', 'skipOnError'     => true, 'targetClass' => Seasons::className(),
+				                        'targetAttribute' => ['season_id' => 'id'],
 			],
 		];
 	}

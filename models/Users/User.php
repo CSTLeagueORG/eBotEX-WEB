@@ -12,6 +12,7 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface {
 	public $salt;
 	public $authKey;
 	public $accessToken;
+	public $isAdmin = true;
 
 
 	/**
