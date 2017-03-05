@@ -110,6 +110,26 @@ AppAsset::register($this);
 									document.location.href = "<?= Yii::$app->urlManager->createAbsoluteUrl("/matches/view/?id="); ?>" + id;
 							}
 
+							function getSessionStorageValue(key) {
+								if (sessionStorage) {
+									try {
+										return sessionStorage.getItem(key);
+									} catch (e) {
+										return null;
+									}
+								}
+								return null;
+							}
+
+							function setSessionStorageValue(key, value) {
+								if (sessionStorage) {
+									try {
+										return sessionStorage.setItem(key, value);
+									} catch (e) {
+									}
+								}
+							}
+
 							function ebotSound(parameter) {
 								if (parameter == "on") {
 									$('div#ebotSound').html('<font color="green"><b>Sound On <a href="#" onclick="ebotSound(\'off\');">(Turn Off)</a></b></font>');
@@ -198,8 +218,7 @@ AppAsset::register($this);
 
 <footer class="footer">
 	<div class="container-fluid">
-		<p class="pull-left"><?= Yii::$app->name ?> WEB panel <?= Yii::$app->version ?> &copy; <a
-					href="http://github.com/CodersGit">PolarWolf</a> 2016-<?= date('Y') ?></p>
+		<p class="pull-left"><?= Yii::$app->name ?> WEB panel <?= Yii::$app->version ?> &copy; <a href="http://github.com/CodersGit">PolarWolf</a> 2016-<?= date('Y') ?></p>
 
 		<p class="pull-right"><?= Yii::powered() ?> and <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>
 		</p>
