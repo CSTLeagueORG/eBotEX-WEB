@@ -20,6 +20,9 @@
 		<?php
 		/* @var $map app\models\Matches\Maps */
 		$mapScore = $map->mapsScores;
+		if (!isset($mapScore[$index])) {
+			continue;
+		}
 		$score1 = $mapScore[$index]->score1_side1 + $mapScore[$index]->score1_side2;
 		$score2 = $mapScore[$index]->score2_side1 + $mapScore[$index]->score2_side2;
 

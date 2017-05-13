@@ -78,16 +78,15 @@ AppAsset::register($this);
 		'options' => ['class' => 'navbar-nav navbar-right'],
 		'items'   => [
 			['label' => 'Home', 'url' => ['/main/index']],
-			['label' => 'About', 'url' => ['/main/about']],
-			['label' => 'Matches', 'url' => ['/matches']],
-			['label' => 'Contact', 'url' => ['/main/contact']],
+			['label' => 'About', 'url'=>null, 'linkOptions'=>['href'=>'https://tools.cstleague.org/ebotex']],
+			['label' => 'Documentation', 'url'=>null, 'linkOptions'=>['href'=>'https://tools.cstleague.org/ebotex/docs']],
 			Yii::$app->user->isGuest? (
-			['label' => 'Login', 'url' => ['/main/login']]
+				['label' => 'Login', 'url' => ['/main/login']]
 			) : (
 				'<li>'
 				. Html::beginForm(['/main/logout'], 'post')
 				. Html::submitButton(
-					'Logout (' . Yii::$app->user->identity->username . ')',
+					'Logout (' . Yii::$app->user->identity->nickname . ')',
 					['class' => 'btn btn-link logout']
 				)
 				. Html::endForm()
@@ -195,7 +194,7 @@ AppAsset::register($this);
 						?>
 					</div>
 				</div>
-				<? if (!Yii::$app->user->isGuest and  Yii::$app->user->identity->isAdmin): ?>
+				<? if (!Yii::$app->user->isGuest and  Yii::$app->user->identity->is_admin): ?>
 					<div class="panel panel-primary">
 						<div class="panel-heading">Websocket status</div>
 						<div class="panel-body">
@@ -219,9 +218,7 @@ AppAsset::register($this);
 <footer class="footer">
 	<div class="container-fluid">
 		<p class="pull-left"><?= Yii::$app->name ?> WEB panel <?= Yii::$app->version ?> &copy; <a href="http://github.com/CodersGit">PolarWolf</a> 2016-<?= date('Y') ?></p>
-
-		<p class="pull-right"><?= Yii::powered() ?> and <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>
-		</p>
+		<p class="pull-right"><?= Yii::powered() ?> and <a href="http://getbootstrap.com" target="_blank">Bootstrap</a></p>
 	</div>
 </footer>
 

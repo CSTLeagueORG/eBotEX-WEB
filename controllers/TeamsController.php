@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use app\models\Teams\Teams;
+use app\models\Teams\TeamsInSeasons;
 use app\models\Teams\TeamsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -40,6 +41,30 @@ class TeamsController extends Controller {
 			'searchModel'  => $searchModel,
 			'dataProvider' => $dataProvider,
 		]);
+	}
+
+	/**
+	 * Lists all Teams models.
+	 *
+	 * @return mixed
+	 */
+	public function actionGetbyseasons () {
+		if (!isset(Yii::$app->request->post()['season_id'])) {
+			throw new NotFoundHttpException('Season not submitted');
+		}
+		$teams = TeamsInSeasons::find()->where(['season_id' => Yii::$app->request->post()['season_id']])->all();
+		$result = [
+			'id' => [],
+			'name' => [],
+			'flag' => [],
+		];
+		foreach($teams as $team) {
+			/** @var $team TeamsInSeasons */
+			array_push($result['id'], $team->team->id);
+			array_push($result['name'], $team->team->name);
+			array_push($result['flag'], $team->team->flag);
+		}
+		return json_encode($result);
 	}
 
 	/**

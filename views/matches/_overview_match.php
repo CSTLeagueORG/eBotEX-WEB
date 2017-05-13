@@ -36,6 +36,11 @@
 							class="fa fa-flag"></i></span></td>
 			</tr>
 			<tr>
+				<th><?= Yii::t('app', 'Tactical pauses enabled') ?></th>
+				<td><span class="label label-<?= ($match->config_ot)? "success" : "danger" ?>"><i
+							class="fa fa-flag"></i></span></td>
+			</tr>
+			<tr>
 				<th><?= Yii::t('app', 'Overtimes enabled') ?></th>
 				<td><span class="label label-<?= ($match->config_ot)? "success" : "danger" ?>"><i
 							class="fa fa-flag"></i></span></td>

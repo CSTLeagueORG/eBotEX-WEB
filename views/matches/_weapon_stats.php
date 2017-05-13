@@ -67,9 +67,9 @@ $weapons = array(
 	<tr>
 		<td>Total</td>
 		<?php foreach($weapons as $weapon): ?>
-			<td <?php if($weaponsStats[$weapon] * 1 == 0) echo 'class="text-muted" '; ?>
+			<td <?php if (!isset($weaponsStats[$weapon]) or $weaponsStats[$weapon] * 1 == 0) echo 'class="text-muted" '; ?>
 					style="border-left: 2px solid #DDDDDD; text-align: center;"
-					colspan="2"><?php echo $weaponsStats[$weapon] * 1; ?></td>
+					colspan="2"><?php echo(!isset($weaponsStats[$weapon])? 0: $weaponsStats[$weapon]) * 1; ?></td>
 		<?php endforeach; ?>
 	</tr>
 	</tfoot>
