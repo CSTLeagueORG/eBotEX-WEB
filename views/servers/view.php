@@ -1,14 +1,14 @@
 <?php
 
-use yii\helpers\Html;
-use yii\widgets\DetailView;
+	use yii\helpers\Html;
+	use yii\widgets\DetailView;
 
-/* @var $this yii\web\View */
-/* @var $model app\models\Servers */
+	/* @var $this yii\web\View */
+	/* @var $model app\models\Servers */
 
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Servers'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+	$this->title = $model->id;
+	$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Servers'), 'url' => ['index']];
+	$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="servers-view">
 

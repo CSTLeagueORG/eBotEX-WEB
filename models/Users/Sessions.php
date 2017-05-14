@@ -1,11 +1,11 @@
 <?php
 
-namespace app\models\Users;
+	namespace app\models\Users;
 
-use yii\db\ActiveRecord;
+	use yii\db\ActiveRecord;
 
-class Sessions extends ActiveRecord {
-	static function tableName () {
-		return 'sf_guard_remember_key';
+	class Sessions extends ActiveRecord {
+		static function tableName () {
+			return 'sf_guard_remember_key';
+		}
 	}
-}

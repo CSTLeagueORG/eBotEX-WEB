@@ -1,15 +1,15 @@
 <?php
-use yii\helpers\Url as Url;
+	use yii\helpers\Url as Url;
 
-class HomeCest {
-	public function ensureThatHomePageWorks (AcceptanceTester $I) {
-		$I->amOnPage(Url::toRoute('/main/index'));
-		$I->see('My Company');
+	class HomeCest {
+		public function ensureThatHomePageWorks (AcceptanceTester $I) {
+			$I->amOnPage(Url::toRoute('/main/index'));
+			$I->see('My Company');
 
-		$I->seeLink('About');
-		$I->click('About');
-		$I->wait(2); // wait for page to be opened
+			$I->seeLink('About');
+			$I->click('About');
+			$I->wait(2); // wait for page to be opened
 
-		$I->see('This is the About page.');
+			$I->see('This is the About page.');
+		}
 	}
-}

@@ -1,7 +1,7 @@
 <?php
 
-/* @var $this yii\web\View */
-/* @var $match app\models\Matches\Matches */
+	/* @var $this yii\web\View */
+	/* @var $match app\models\Matches\Matches */
 ?>
 <script>
 	$(function () {
@@ -49,12 +49,12 @@
 	</tr>
 	</thead>
 	<?php
-	$total = array(
-		"kill"   => 0, "death" => 0, "hs" => 0, "bombe" => 0,
-		"defuse" => 0, "tk" => 0, "point" => 0, "firstkill" => 0,
-		"1v1"    => 0, "1v2" => 0, "1v3" => 0, "1v4" => 0, "1v5" => 0,
-		"1kill"  => 0, "2kill" => 0, "3kill" => 0, "4kill" => 0, "5kill" => 0, "clutch" => 0, "assist" => 0,
-	);
+		$total = array(
+			"kill"   => 0, "death" => 0, "hs" => 0, "bombe" => 0,
+			"defuse" => 0, "tk" => 0, "point" => 0, "firstkill" => 0,
+			"1v1"    => 0, "1v2" => 0, "1v3" => 0, "1v4" => 0, "1v5" => 0,
+			"1kill"  => 0, "2kill" => 0, "3kill" => 0, "4kill" => 0, "5kill" => 0, "clutch" => 0, "assist" => 0,
+		);
 	?>
 	<tbody>
 	<?php foreach($match->currentMap->players as $player): ?>

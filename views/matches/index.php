@@ -1,145 +1,155 @@
 <?php
 
-use yii\helpers\Html;
-use yii\grid\GridView;
-use yii\widgets\Pjax;
-use yii\helpers\Url;
-use \app\models\Matches\Matches;
-use \app\models\Teams\Teams;
+	use yii\helpers\Html;
+	use yii\grid\GridView;
+	use yii\widgets\Pjax;
+	use yii\helpers\Url;
+	use \app\models\Matches\Matches;
+	use \app\models\Teams\Teams;
 
-/* @var $this yii\web\View */
-/* @var $searchModel app\models\Matches\MatchesSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
+	/* @var $this yii\web\View */
+	/* @var $searchModel app\models\Matches\MatchesSearch */
+	/* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Matches');
-$this->params['breadcrumbs'][] = $this->title;
+	$this->title = Yii::t('app', 'Matches');
+	$this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<? if (!Yii::$app->user->isGuest and  Yii::$app->user->identity->is_admin): ?>
-<script>
-	function doRequest(event, ip, id, authkey) {
-		var data = id + " " + event + " " + ip;
-		data = Aes.Ctr.encrypt(data, authkey, 256);
-		send = JSON.stringify([data, ip]);
-		socket.emit("matchCommandSend", send);
-		$('#loading_' + id).show();
-		return false;
-	}
+<? if(!Yii::$app->user->isGuest and Yii::$app->user->identity->is_admin): ?>
+	<script>
+		function doRequest(event, ip, id, authkey) {
+			var data = id + " " + event + " " + ip;
+			data = Aes.Ctr.encrypt(data, authkey, 256);
+			send = JSON.stringify([data, ip]);
+			socket.emit("matchCommandSend", send);
+			$('#loading_' + id).show();
+			return false;
+		}
 
-	var enableNotifScore = false;
-	var lastMatchEnd = 0;
-	function getButtons(match_id) {
-		$.ajax({
-			type: "POST",
-			url: "/admin.php/matchs/actions/" + match_id,
-		}).done(function( msg ) {
-			var data = $.parseJSON(msg);
-			var output = "";
-			for (var i = 0; i < data.length; i++) {
-				output += data[i];
-			}
-			$('#matchs-actions-'+match_id).children('td.matchs-actions-container').empty().append(output);
-		});
-	}
-	$(document).ready(function() {
-		PNotify.desktop.permission();
-		initSocketIo(function(socket) {
-			socket.emit("identify", {type: "matchs"});
-			socket.on("matchsHandler", function(data) {
-				var data = jQuery.parseJSON(data);
-				if (data['content'] == 'stop')
-					location.reload();
-				else if (data['message'] == 'button') {
-					getButtons(data['id']);
-					$('#loading_' + data['id']).hide();
-				} else if (data['message'] == 'streamerReady') {
-					$('.streamer_' + data['id']).addClass('disabled');
-					$('#loading_' + data['id']).hide();
-				} else if (data['message'] == 'status') {
-					if (data['content'] == 'Finished') {
-						if (lastMatchEnd != data['id']) {
+		var enableNotifScore = false;
+		var lastMatchEnd = 0;
+		function getButtons(match_id) {
+			$.ajax({
+				type: "POST",
+				url: "/admin.php/matchs/actions/" + match_id,
+			}).done(function (msg) {
+				var data = $.parseJSON(msg);
+				var output = "";
+				for (var i = 0; i < data.length; i++) {
+					output += data[i];
+				}
+				$('#matchs-actions-' + match_id).children('td.matchs-actions-container').empty().append(output);
+			});
+		}
+		$(document).ready(function () {
+			PNotify.desktop.permission();
+			initSocketIo(function (socket) {
+				socket.emit("identify", {type: "matchs"});
+				socket.on("matchsHandler", function (data) {
+					var data = jQuery.parseJSON(data);
+					if (data['content'] == 'stop')
+						location.reload();
+					else if (data['message'] == 'button') {
+						getButtons(data['id']);
+						$('#loading_' + data['id']).hide();
+					}
+					else if (data['message'] == 'streamerReady') {
+						$('.streamer_' + data['id']).addClass('disabled');
+						$('#loading_' + data['id']).hide();
+					}
+					else if (data['message'] == 'status') {
+						if (data['content'] == 'Finished') {
+							if (lastMatchEnd != data['id']) {
+								new PNotify({
+									title: 'Match finished',
+									type: 'info',
+									text: $("#team_a-" + data['id']).text() + " vs " + $("#team_b-" + data['id']).text(),
+									desktop: {
+										desktop: true
+									}
+								});
+							}
+							lastMatchEnd = data['id'];
+							location.reload();
+						}
+						else if (data['content'] == 'is_paused') {
 							new PNotify({
-								title: 'Match finished',
+								title: 'Match paused!',
 								type: 'info',
-								text: $("#team_a-"+data['id']).text()+ " vs "+$("#team_b-"+data['id']).text(),
+								text: $("#team_a-" + data['id']).text() + " vs " + $("#team_b-" + data['id']).text(),
+								desktop: {
+									desktop: true
+								}
+							});
+							$("#flag-" + data['id']).attr('src', "/images/icons/flag_yellow.png");
+							if (getSessionStorageValue('sound') == "on")
+								$("#soundHandle").trigger('play');
+						}
+						else if (data['content'] == 'is_unpaused') {
+							new PNotify({
+								title: 'Match unpaused!',
+								type: 'info',
+								text: $("#team_a-" + data['id']).text() + " vs " + $("#team_b-" + data['id']).text(),
+								desktop: {
+									desktop: true
+								}
+							});
+							$("#flag-" + data['id']).attr('src', "/images/icons/flag_green.png");
+							if (getSessionStorageValue('sound') == "on")
+								$("#soundHandle").trigger('play');
+						}
+						else if (data['content'] != 'Starting') {
+							if ($("#flag-" + data['id']).attr('src') == "/images/icons/flag_red.png") {
+								location.reload();
+							}
+							else {
+								$("#flag-" + data['id']).attr('src', "/images/icons/flag_green.png");
+								$('#loading_' + data['id']).hide();
+							}
+							$("div.status-" + data['id']).html(data['content']);
+						}
+					}
+					else if (data['message'] == 'score') {
+						if (data['scoreA'] < 10)
+							data['scoreA'] = "0" + data['scoreA'];
+						if (data['scoreB'] < 10)
+							data['scoreB'] = "0" + data['scoreB'];
+
+						if (enableNotifScore) {
+							new PNotify({
+								title: 'Score Update',
+								type: 'info',
+								text: $("#team_a-" + data['id']).text() + " (" + data['scoreA'] + ") vs (" + data['scoreB'] + ") " + $("#team_b-" + data['id']).text(),
 								desktop: {
 									desktop: true
 								}
 							});
 						}
-						lastMatchEnd = data['id'];
-						location.reload();
-					} else if (data['content'] == 'is_paused') {
-						new PNotify({
-							title: 'Match paused!',
-							type: 'info',
-							text: $("#team_a-"+data['id']).text()+ " vs "+$("#team_b-"+data['id']).text(),
-							desktop: {
-								desktop: true
-							}
-						});
-						$("#flag-" + data['id']).attr('src', "/images/icons/flag_yellow.png");
-						if (getSessionStorageValue('sound') == "on")
-							$("#soundHandle").trigger('play');
-					} else if (data['content'] == 'is_unpaused') {
-						new PNotify({
-							title: 'Match unpaused!',
-							type: 'info',
-							text: $("#team_a-"+data['id']).text()+ " vs "+$("#team_b-"+data['id']).text(),
-							desktop: {
-								desktop: true
-							}
-						});
-						$("#flag-" + data['id']).attr('src', "/images/icons/flag_green.png");
-						if (getSessionStorageValue('sound') == "on")
-							$("#soundHandle").trigger('play');
-					} else if (data['content'] != 'Starting') {
-						if ($("#flag-" + data['id']).attr('src') == "/images/icons/flag_red.png") {
-							location.reload();
-						} else {
-							$("#flag-" + data['id']).attr('src', "/images/icons/flag_green.png");
-							$('#loading_' + data['id']).hide();
+
+						if (data['scoreA'] == data['scoreB'])
+							$("#score-" + data['id']).html("<font color=\"blue\">" + data['scoreA'] + "</font> - <font color=\"blue\">" + data['scoreB'] + "</font>");
+						else if (data['scoreA'] > data['scoreB'])
+							$("#score-" + data['id']).html("<font color=\"green\">" + data['scoreA'] + "</font> - <font color=\"red\">" + data['scoreB'] + "</font>");
+						else if (data['scoreA'] < data['scoreB'])
+							$("#score-" + data['id']).html("<font color=\"red\">" + data['scoreA'] + "</font> - <font color=\"green\">" + data['scoreB'] + "</font>");
+					}
+					else if (data['message'] == 'teams') {
+						if (data['teamA'] == 'ct') {
+							$("#team_a-" + data['id']).html("<font color='blue'>" + $("#team_a-" + data['id']).text() + "</font>")
+							$("#team_b-" + data['id']).html("<font color='red'>" + $("#team_b-" + data['id']).text() + "</font>")
 						}
-						$("div.status-" + data['id']).html(data['content']);
+						else {
+							$("#team_a-" + data['id']).html("<font color='red'>" + $("#team_a-" + data['id']).text() + "</font>")
+							$("#team_b-" + data['id']).html("<font color='blue'>" + $("#team_b-" + data['id']).text() + "</font>")
+						}
 					}
-				} else if (data['message'] == 'score') {
-					if (data['scoreA'] < 10)
-						data['scoreA'] = "0" + data['scoreA'];
-					if (data['scoreB'] < 10)
-						data['scoreB'] = "0" + data['scoreB'];
-
-					if (enableNotifScore) {
-						new PNotify({
-							title: 'Score Update',
-							type: 'info',
-							text: $("#team_a-"+data['id']).text()+ " ("+data['scoreA']+") vs ("+data['scoreB']+") "+$("#team_b-"+data['id']).text(),
-							desktop: {
-								desktop: true
-							}
-						});
+					else if (data['message'] == 'currentMap') {
+						$("#map-" + data['id']).html(data['mapname']);
 					}
-
-					if (data['scoreA'] == data['scoreB'])
-						$("#score-" + data['id']).html("<font color=\"blue\">" + data['scoreA'] + "</font> - <font color=\"blue\">" + data['scoreB'] + "</font>");
-					else if (data['scoreA'] > data['scoreB'])
-						$("#score-" + data['id']).html("<font color=\"green\">" + data['scoreA'] + "</font> - <font color=\"red\">" + data['scoreB'] + "</font>");
-					else if (data['scoreA'] < data['scoreB'])
-						$("#score-" + data['id']).html("<font color=\"red\">" + data['scoreA'] + "</font> - <font color=\"green\">" + data['scoreB'] + "</font>");
-				} else if (data['message'] == 'teams') {
-					if (data['teamA'] == 'ct') {
-						$("#team_a-"+data['id']).html("<font color='blue'>"+$("#team_a-"+data['id']).text()+"</font>")
-						$("#team_b-"+data['id']).html("<font color='red'>"+$("#team_b-"+data['id']).text()+"</font>")
-					} else {
-						$("#team_a-"+data['id']).html("<font color='red'>"+$("#team_a-"+data['id']).text()+"</font>")
-						$("#team_b-"+data['id']).html("<font color='blue'>"+$("#team_b-"+data['id']).text()+"</font>")
-					}
-				} else if (data['message'] == 'currentMap') {
-					$("#map-"+data['id']).html(data['mapname']);
-				}
+				});
 			});
 		});
-	});
-</script>
+	</script>
 	<audio id="soundHandle" style="display: none;"></audio>
 	<script>
 		function getSessionStorageValue(key) {
@@ -169,12 +179,12 @@ $this->params['breadcrumbs'][] = $this->title;
 		}
 
 		var currentMatchAdmin = 0;
-		$(function() {
+		$(function () {
 			$(".bo3").popover();
 
 			$.ajax({
 				url: "/images/soundHandle/notify.mp3"
-			}).done(function(data) {
+			}).done(function (data) {
 				$("#soundHandle").attr('src', '/images/soundHandle/notify.mp3');
 			});
 
@@ -182,7 +192,8 @@ $this->params['breadcrumbs'][] = $this->title;
 				var value = getSessionStorageValue("current.selected");
 				if ($("[data-id=" + value + "]:first").length == 1) {
 					$("[data-id=" + value + "]:first").click();
-				} else {
+				}
+				else {
 					setSessionStorageValue("current.selected", 0);
 				}
 			}

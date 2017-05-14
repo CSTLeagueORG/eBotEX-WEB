@@ -1,7 +1,7 @@
 <?php
 
-/* @var $this yii\web\View */
-/* @var $match app\models\Matches\Matches */
+	/* @var $this yii\web\View */
+	/* @var $match app\models\Matches\Matches */
 ?>
 <div class="row">
 	<div class="col-sm-6">
@@ -22,38 +22,38 @@
 			<tr>
 				<th><?= Yii::t('app', 'Active') ?></th>
 				<td><span class="label label-<?= ($match->enable)? "success" : "danger" ?>"><i
-							class="fa fa-flag"></i></span></td>
+								class="fa fa-flag"></i></span></td>
 			</tr>
 			<tr>
 				<th><?= Yii::t('app', 'Play all rounds') ?></th>
 				<td>
 									<span class="label label-<?= ($match->config_full_score)? "success" : "danger" ?>"><i
-											class="fa fa-flag"></i></span></td>
+												class="fa fa-flag"></i></span></td>
 			</tr>
 			<tr>
 				<th><?= Yii::t('app', 'Wait for streamers') ?></th>
 				<td><span class="label label-<?= ($match->config_streamer)? "success" : "danger" ?>"><i
-							class="fa fa-flag"></i></span></td>
+								class="fa fa-flag"></i></span></td>
 			</tr>
 			<tr>
 				<th><?= Yii::t('app', 'Tactical pauses enabled') ?></th>
 				<td><span class="label label-<?= ($match->config_ot)? "success" : "danger" ?>"><i
-							class="fa fa-flag"></i></span></td>
+								class="fa fa-flag"></i></span></td>
 			</tr>
 			<tr>
 				<th><?= Yii::t('app', 'Overtimes enabled') ?></th>
 				<td><span class="label label-<?= ($match->config_ot)? "success" : "danger" ?>"><i
-							class="fa fa-flag"></i></span></td>
+								class="fa fa-flag"></i></span></td>
 			</tr>
 			<tr>
 				<th><?= Yii::t('app', 'Knife round') ?></th>
 				<td><span class="label label-<?= ($match->config_knife_round)? "success" : "danger" ?>"><i
-							class="fa fa-flag"></i></span></td>
+								class="fa fa-flag"></i></span></td>
 			</tr>
 			<tr>
 				<th><?= Yii::t('app', 'Generate Heatmap') ?></th>
 				<td><span class="label label-<?= ($match->config_heatmap)? "success" : "danger" ?>"><i
-							class="fa fa-flag"></i></span></td>
+								class="fa fa-flag"></i></span></td>
 			</tr>
 		</table>
 	</div>
@@ -76,21 +76,21 @@
 			<tr>
 				<th><?= Yii::t('app', 'Number of players') ?></th>
 				<td><?
-					$a = 0;
-					$b = 0;
-					$spec = 0;
-					foreach($match->players as $player) {
-						if($player->team == "other") {
-							$spec++;
+						$a = 0;
+						$b = 0;
+						$spec = 0;
+						foreach($match->players as $player) {
+							if($player->team == "other") {
+								$spec++;
+							}
+							if($player->team == "a") {
+								$a++;
+							}
+							if($player->team == "b") {
+								$b++;
+							}
 						}
-						if($player->team == "a") {
-							$a++;
-						}
-						if($player->team == "b") {
-							$b++;
-						}
-					}
-					echo count($match->players) . ": " . (($match->teamA)? $match->teamA->name : $match->team_a_name) . " : " . $a . "; " . (($match->teamB)? $match->teamB->name : $match->team_b_name) . " : " . $b . "; " . Yii::t('app', "Spectators") . " : " . $spec;
+						echo count($match->players) . ": " . (($match->teamA)? $match->teamA->name : $match->team_a_name) . " : " . $a . "; " . (($match->teamB)? $match->teamB->name : $match->team_b_name) . " : " . $b . "; " . Yii::t('app', "Spectators") . " : " . $spec;
 					?>
 				</td>
 			</tr>

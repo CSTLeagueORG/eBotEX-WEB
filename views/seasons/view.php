@@ -1,14 +1,14 @@
 <?php
 
-use yii\helpers\Html;
-use yii\widgets\DetailView;
+	use yii\helpers\Html;
+	use yii\widgets\DetailView;
 
-/* @var $this yii\web\View */
-/* @var $model app\models\Seasons */
+	/* @var $this yii\web\View */
+	/* @var $model app\models\Seasons */
 
-$this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Seasons'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+	$this->title = $model->name;
+	$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Seasons'), 'url' => ['index']];
+	$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="seasons-view">
 

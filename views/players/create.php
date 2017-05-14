@@ -1,14 +1,14 @@
 <?php
 
-use yii\helpers\Html;
+	use yii\helpers\Html;
 
 
-/* @var $this yii\web\View */
-/* @var $model app\models\Players */
+	/* @var $this yii\web\View */
+	/* @var $model app\models\Players */
 
-$this->title = Yii::t('app', 'Create Players');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Players'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+	$this->title = Yii::t('app', 'Create Players');
+	$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Players'), 'url' => ['index']];
+	$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="players-create">
 

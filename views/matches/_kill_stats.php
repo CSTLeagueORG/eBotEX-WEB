@@ -1,11 +1,11 @@
 <?php
 
-use app\models\Matches\Round;
-use \app\models\Stats\PlayerKill;
-use yii\helpers\Html;
+	use app\models\Matches\Round;
+	use \app\models\Stats\PlayerKill;
+	use yii\helpers\Html;
 
-/* @var $this yii\web\View */
-/* @var $match app\models\Matches\Matches */
+	/* @var $this yii\web\View */
+	/* @var $match app\models\Matches\Matches */
 ?>
 <h5><b><i class="fa fa-fire"></i> <?= Yii::t('app', "Killer / Killed"); ?></b></h5>
 
@@ -36,12 +36,12 @@ use yii\helpers\Html;
 </style>
 
 <?php
-$players = array();
-$kills = PlayerKill::find()->where(["match_id" => $match->id])->all();
-foreach($kills as $kill) {
-	/** @var $kill PlayerKill */
-	@$players[$kill->killer_id][$kill->killed_id]++;
-}
+	$players = array();
+	$kills = PlayerKill::find()->where(["match_id" => $match->id])->all();
+	foreach($kills as $kill) {
+		/** @var $kill PlayerKill */
+		@$players[$kill->killer_id][$kill->killed_id]++;
+	}
 ?>
 
 <table class="table table-striped table-bordered" style="width: auto;" id="tableKilledKiller">

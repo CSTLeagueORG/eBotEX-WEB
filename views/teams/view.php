@@ -1,14 +1,14 @@
 <?php
 
-use yii\helpers\Html;
-use yii\widgets\DetailView;
+	use yii\helpers\Html;
+	use yii\widgets\DetailView;
 
-/* @var $this yii\web\View */
-/* @var $model app\models\Teams */
+	/* @var $this yii\web\View */
+	/* @var $model app\models\Teams */
 
-$this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Teams'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+	$this->title = $model->name;
+	$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Teams'), 'url' => ['index']];
+	$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="teams-view">
 

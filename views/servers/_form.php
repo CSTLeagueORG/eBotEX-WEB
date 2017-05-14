@@ -1,11 +1,11 @@
 <?php
 
-use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+	use yii\helpers\Html;
+	use yii\widgets\ActiveForm;
 
-/* @var $this yii\web\View */
-/* @var $model app\models\Servers */
-/* @var $form yii\widgets\ActiveForm */
+	/* @var $this yii\web\View */
+	/* @var $model app\models\Servers */
+	/* @var $form yii\widgets\ActiveForm */
 ?>
 
 <div class="servers-form">

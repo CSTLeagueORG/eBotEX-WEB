@@ -1,7 +1,7 @@
 <?php
 
-/* @var $this yii\web\View */
-/* @var $match app\models\Matches\Matches */
+	/* @var $this yii\web\View */
+	/* @var $match app\models\Matches\Matches */
 ?>
 <table class="table table-striped">
 	<thead>
@@ -20,7 +20,7 @@
 		<?php
 		/* @var $map app\models\Matches\Maps */
 		$mapScore = $map->mapsScores;
-		if (!isset($mapScore[$index])) {
+		if(!isset($mapScore[$index])) {
 			continue;
 		}
 		$score1 = $mapScore[$index]->score1_side1 + $mapScore[$index]->score1_side2;

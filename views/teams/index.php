@@ -1,15 +1,15 @@
 <?php
 
-use yii\helpers\Html;
-use yii\grid\GridView;
-use yii\widgets\Pjax;
+	use yii\helpers\Html;
+	use yii\grid\GridView;
+	use yii\widgets\Pjax;
 
-/* @var $this yii\web\View */
-/* @var $searchModel app\models\TeamsSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
+	/* @var $this yii\web\View */
+	/* @var $searchModel app\models\TeamsSearch */
+	/* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Teams');
-$this->params['breadcrumbs'][] = $this->title;
+	$this->title = Yii::t('app', 'Teams');
+	$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="teams-index">
 

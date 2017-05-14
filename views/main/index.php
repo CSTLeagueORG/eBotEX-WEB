@@ -1,8 +1,8 @@
 <?php
 
-/* @var $this yii\web\View */
+	/* @var $this yii\web\View */
 
-$this->title = 'eBotEX Home';
+	$this->title = 'eBotEX Home';
 ?>
 <div class="site-index">
 

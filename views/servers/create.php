@@ -1,14 +1,14 @@
 <?php
 
-use yii\helpers\Html;
+	use yii\helpers\Html;
 
 
-/* @var $this yii\web\View */
-/* @var $model app\models\Servers */
+	/* @var $this yii\web\View */
+	/* @var $model app\models\Servers */
 
-$this->title = Yii::t('app', 'Create Servers');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Servers'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+	$this->title = Yii::t('app', 'Create Servers');
+	$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Servers'), 'url' => ['index']];
+	$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="servers-create">
 

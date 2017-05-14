@@ -1,28 +1,30 @@
 <?php
 
-use \app\models\Stats\PlayerKill;
-use yii\helpers\Html;
+	use \app\models\Stats\PlayerKill;
+	use yii\helpers\Html;
 
-/* @var $this yii\web\View */
-/* @var $match app\models\Matches\Matches */
+	/* @var $this yii\web\View */
+	/* @var $match app\models\Matches\Matches */
 ?>
 <h5><b><i class="fa fa-fire"></i> <?= Yii::t('app', "Weapon Statistics by Player"); ?></b></h5>
 
 <?php
-$players = array();
-$kills = PlayerKill::find()->where(["match_id" => $match->id])->all();
-foreach($kills as $kill) {
-	/** @var $kill PlayerKill */
-	@$players[$kill->killer_id][$kill->weapon]["k"]++;
-	@$players[$kill->killed_id][$kill->weapon]["d"]++;
-}
+	$players = array();
+	$kills = PlayerKill::find()->where(["match_id" => $match->id])->all();
+	foreach($kills as $kill) {
+		/** @var $kill PlayerKill */
+		@$players[$kill->killer_id][$kill->weapon]["k"]++;
+		@$players[$kill->killed_id][$kill->weapon]["d"]++;
+	}
 
-$weapons = array(
-	"knife_default_ct", "knife_default_t", "taser", "hkp2000", "usp_silencer", "usp_silencer_off", "glock", "deagle",
-	"p250", "tec9", "fiveseven", "awp", "m4a1", "m4a1_silencer", "m4a1_silencer_off", "ak47", "famas", "galilar",
-	"hegrenade", "inferno", "scar20", "mp7", "bizon", "p90", "mag7", "ump45", "taser", "nova", "mac10", "mp9", "elite",
-	"ssg08",
-);
+	$weapons = array(
+		"knife_default_ct", "knife_default_t", "taser", "hkp2000", "usp_silencer", "usp_silencer_off", "glock",
+		"deagle",
+		"p250", "tec9", "fiveseven", "awp", "m4a1", "m4a1_silencer", "m4a1_silencer_off", "ak47", "famas", "galilar",
+		"hegrenade", "inferno", "scar20", "mp7", "bizon", "p90", "mag7", "ump45", "taser", "nova", "mac10", "mp9",
+		"elite",
+		"ssg08",
+	);
 ?>
 
 <table class="table">
@@ -67,9 +69,9 @@ $weapons = array(
 	<tr>
 		<td>Total</td>
 		<?php foreach($weapons as $weapon): ?>
-			<td <?php if (!isset($weaponsStats[$weapon]) or $weaponsStats[$weapon] * 1 == 0) echo 'class="text-muted" '; ?>
+			<td <?php if(!isset($weaponsStats[$weapon]) or $weaponsStats[$weapon] * 1 == 0) echo 'class="text-muted" '; ?>
 					style="border-left: 2px solid #DDDDDD; text-align: center;"
-					colspan="2"><?php echo(!isset($weaponsStats[$weapon])? 0: $weaponsStats[$weapon]) * 1; ?></td>
+					colspan="2"><?php echo (!isset($weaponsStats[$weapon])? 0 : $weaponsStats[$weapon]) * 1; ?></td>
 		<?php endforeach; ?>
 	</tr>
 	</tfoot>

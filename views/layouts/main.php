@@ -1,15 +1,15 @@
 <?php
 
-/* @var $this \yii\web\View */
-/* @var $content string */
+	/* @var $this \yii\web\View */
+	/* @var $content string */
 
-use yii\helpers\Html;
-use yii\bootstrap\Nav;
-use yii\bootstrap\NavBar;
-use yii\widgets\Breadcrumbs;
-use app\assets\AppAsset;
+	use yii\helpers\Html;
+	use yii\bootstrap\Nav;
+	use yii\bootstrap\NavBar;
+	use yii\widgets\Breadcrumbs;
+	use app\assets\AppAsset;
 
-AppAsset::register($this);
+	AppAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -23,8 +23,8 @@ AppAsset::register($this);
 </head>
 <body>
 <script>
-	function submitForm (id) {
-		$("#"+id).submit();
+	function submitForm(id) {
+		$("#" + id).submit();
 	}
 
 	var socketIoAddress = "<?php echo Yii::$app->params['bot_ip'] ?>:<?php echo Yii::$app->params["bot_port"]; ?>";
@@ -46,9 +46,9 @@ AppAsset::register($this);
 		}
 
 		loadingSocketIo = true;
-		$.getScript("http://"+socketIoAddress+"/socket.io/socket.io.js", function(){
-			socket = io.connect("http://"+socketIoAddress);
-			socket.on('connect', function(){
+		$.getScript("http://" + socketIoAddress + "/socket.io/socket.io.js", function () {
+			socket = io.connect("http://" + socketIoAddress);
+			socket.on('connect', function () {
 				socketIoLoaded = true;
 				loadingSocketIo = false;
 				if (typeof callback == "function") {
@@ -66,35 +66,37 @@ AppAsset::register($this);
 
 <div class="wrap">
 	<?php
-	NavBar::begin([
-		'brandLabel'            => 'eBotEX',
-		'brandUrl'              => Yii::$app->homeUrl,
-		'options'               => [
-			'class' => 'navbar-inverse navbar-fixed-top',
-		],
-		'innerContainerOptions' => ['class' => 'container-fluid'],
-	]);
-	echo Nav::widget([
-		'options' => ['class' => 'navbar-nav navbar-right'],
-		'items'   => [
-			['label' => 'Home', 'url' => ['/main/index']],
-			['label' => 'About', 'url'=>null, 'linkOptions'=>['href'=>'https://tools.cstleague.org/ebotex']],
-			['label' => 'Documentation', 'url'=>null, 'linkOptions'=>['href'=>'https://tools.cstleague.org/ebotex/docs']],
-			Yii::$app->user->isGuest? (
+		NavBar::begin([
+			'brandLabel'            => 'eBotEX',
+			'brandUrl'              => Yii::$app->homeUrl,
+			'options'               => [
+				'class' => 'navbar-inverse navbar-fixed-top',
+			],
+			'innerContainerOptions' => ['class' => 'container-fluid'],
+		]);
+		echo Nav::widget([
+			'options' => ['class' => 'navbar-nav navbar-right'],
+			'items'   => [
+				['label' => 'Home', 'url' => ['/main/index']],
+				['label' => 'About', 'url' => null, 'linkOptions' => ['href' => 'https://tools.cstleague.org/ebotex']],
+				['label'       => 'Documentation', 'url' => null,
+				 'linkOptions' => ['href' => 'https://tools.cstleague.org/ebotex/docs'],
+				],
+				Yii::$app->user->isGuest? (
 				['label' => 'Login', 'url' => ['/main/login']]
-			) : (
-				'<li>'
-				. Html::beginForm(['/main/logout'], 'post')
-				. Html::submitButton(
-					'Logout (' . Yii::$app->user->identity->nickname . ')',
-					['class' => 'btn btn-link logout']
-				)
-				. Html::endForm()
-				. '</li>'
-			),
-		],
-	]);
-	NavBar::end();
+				) : (
+					'<li>'
+					. Html::beginForm(['/main/logout'], 'post')
+					. Html::submitButton(
+						'Logout (' . Yii::$app->user->identity->nickname . ')',
+						['class' => 'btn btn-link logout']
+					)
+					. Html::endForm()
+					. '</li>'
+				),
+			],
+		]);
+		NavBar::end();
 	?>
 
 	<div class="container-fluid">
@@ -133,25 +135,26 @@ AppAsset::register($this);
 								if (parameter == "on") {
 									$('div#ebotSound').html('<font color="green"><b>Sound On <a href="#" onclick="ebotSound(\'off\');">(Turn Off)</a></b></font>');
 									setSessionStorageValue('sound', 'on');
-								} else if (parameter == "off") {
+								}
+								else if (parameter == "off") {
 									$('div#ebotSound').html('<font color="red"><b>Sound Off <a href="#" onclick="ebotSound(\'on\');">(Turn On)</a></b></font>');
 									setSessionStorageValue('sound', 'off');
 								}
 							}
 
-							$(document).ready(function() {
-								initSocketIo(function(socket) {
+							$(document).ready(function () {
+								initSocketIo(function (socket) {
 									$('div#websocketAlive').html('<font color="green"><b>WebSocket online</b></font>');
-									socket.on('connect', function() {
+									socket.on('connect', function () {
 										$('div#websocketAlive').html('<font color="green"><b>WebSocket online</b></font>');
 									});
-									socket.emit("identify", { type: "alive" } );
+									socket.emit("identify", {type: "alive"});
 									socket.on("aliveHandler", function (data) {
 										if (data.data == "__isAlive__") {
 											$('div#ebotAlive').html('<font color="green"><b>eBot online</b></font>');
 										}
 									});
-									socket.on('disconnect', function(){
+									socket.on('disconnect', function () {
 										$('div#websocketAlive').html('<font color="red"><b>WebSocket offline</b></font>');
 										$('div#ebotAlive').html('<font color="red"><b>eBot offline</b></font>');
 									});
@@ -163,7 +166,8 @@ AppAsset::register($this);
 
 								if (getSessionStorageValue('sound') == 'on') {
 									$('div#ebotSound').html('<font color="green"><b>Sound On <a href="#" onclick="ebotSound(\'off\');">(Turn Off)</a></b></font>');
-								} else if (getSessionStorageValue('sound') == 'off') {
+								}
+								else if (getSessionStorageValue('sound') == 'off') {
 									$('div#ebotSound').html('<font color="red"><b>Sound Off <a href="#" onclick="ebotSound(\'on\');">(Turn On)</a></b></font>');
 								}
 							});
@@ -194,13 +198,13 @@ AppAsset::register($this);
 						?>
 					</div>
 				</div>
-				<? if (!Yii::$app->user->isGuest and  Yii::$app->user->identity->is_admin): ?>
+				<? if(!Yii::$app->user->isGuest and Yii::$app->user->identity->is_admin): ?>
 					<div class="panel panel-primary">
 						<div class="panel-heading">Websocket status</div>
 						<div class="panel-body">
-							<div id="websocketAlive"><?= Yii::t('app',"Loading"); ?></div>
-							<div id="ebotAlive"><?= Yii::t('app',"Loading"); ?></div>
-							<div id="ebotSound"><?= Yii::t('app',"Loading"); ?></div>
+							<div id="websocketAlive"><?= Yii::t('app', "Loading"); ?></div>
+							<div id="ebotAlive"><?= Yii::t('app', "Loading"); ?></div>
+							<div id="ebotSound"><?= Yii::t('app', "Loading"); ?></div>
 						</div>
 					</div>
 				<? endif ?>
@@ -217,8 +221,10 @@ AppAsset::register($this);
 
 <footer class="footer">
 	<div class="container-fluid">
-		<p class="pull-left"><?= Yii::$app->name ?> WEB panel <?= Yii::$app->version ?> &copy; <a href="http://github.com/CodersGit">PolarWolf</a> 2016-<?= date('Y') ?></p>
-		<p class="pull-right"><?= Yii::powered() ?> and <a href="http://getbootstrap.com" target="_blank">Bootstrap</a></p>
+		<p class="pull-left"><?= Yii::$app->name ?> WEB panel <?= Yii::$app->version ?> &copy; <a
+					href="http://github.com/CodersGit">PolarWolf</a> 2016-<?= date('Y') ?></p>
+		<p class="pull-right"><?= Yii::powered() ?> and <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>
+		</p>
 	</div>
 </footer>
 

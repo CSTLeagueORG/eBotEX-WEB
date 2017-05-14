@@ -1,118 +1,118 @@
 <?php
 
-use app\models\Matches\Round;
-use \app\models\Stats\PlayerKill;
-use yii\helpers\Html;
+	use app\models\Matches\Round;
+	use \app\models\Stats\PlayerKill;
+	use yii\helpers\Html;
 
-/* @var $this yii\web\View */
-/* @var $match app\models\Matches\Matches */
+	/* @var $this yii\web\View */
+	/* @var $match app\models\Matches\Matches */
 
-$last = null;
-$data = array();
-$i = -1;
-$count = 0;
-$rounds = $match->roundSummaries;
+	$last = null;
+	$data = array();
+	$i = -1;
+	$count = 0;
+	$rounds = $match->roundSummaries;
 
-$round_current = 0;
-$round_a = 0;
-$round_b = 0;
+	$round_current = 0;
+	$round_a = 0;
+	$round_b = 0;
 
-$stats = array();
-$stats["team_a"] = array(
-	"bomb_planted_win"   => 0,
-	"bomb_planted_loose" => 0,
-	"bomb_explosed"      => 0,
-	"bomb_defused"       => 0,
-	"kill"               => 0,
-	"time"               => 0,
-);
+	$stats = array();
+	$stats["team_a"] = array(
+		"bomb_planted_win"   => 0,
+		"bomb_planted_loose" => 0,
+		"bomb_explosed"      => 0,
+		"bomb_defused"       => 0,
+		"kill"               => 0,
+		"time"               => 0,
+	);
 
-$stats["team_b"] = array(
-	"bomb_planted_win"   => 0,
-	"bomb_planted_loose" => 0,
-	"bomb_explosed"      => 0,
-	"bomb_defused"       => 0,
-	"kill"               => 0,
-	"time"               => 0,
-);
+	$stats["team_b"] = array(
+		"bomb_planted_win"   => 0,
+		"bomb_planted_loose" => 0,
+		"bomb_explosed"      => 0,
+		"bomb_defused"       => 0,
+		"kill"               => 0,
+		"time"               => 0,
+	);
 
-foreach($rounds as $round) {
-	if($round->team_win == "a") {
-		$win = "ct";
-	} else {
-		$win = "t";
+	foreach($rounds as $round) {
+		if($round->team_win == "a") {
+			$win = "ct";
+		} else {
+			$win = "t";
+		}
+
+		if($round->team_win == "a") {
+			if(($round->win_type == "normal") && $round->t_win && $round->bomb_planted) {
+				$stats["team_a"]["bomb_planted_win"]++;
+			} elseif(($round->win_type == "normal") && !$round->bomb_planted) {
+				$stats["team_a"]["kill"]++;
+			} elseif(($round->win_type == "bombdefused")) {
+				$stats["team_a"]["bomb_defused"]++;
+				$stats["team_b"]["bomb_planted_loose"]++;
+			} elseif($round->win_type == "saved") {
+				$stats["team_a"]["time"]++;
+			} elseif(($round->win_type == "bombeexploded")) {
+				$stats["team_a"]["bomb_explosed"]++;
+			}
+		}
+
+		if($round->team_win == "b") {
+			if(($round->win_type == "normal") && $round->t_win && $round->bomb_planted) {
+				$stats["team_b"]["bomb_planted_win"]++;
+			} elseif(($round->win_type == "normal") && !$round->bomb_planted) {
+				$stats["team_b"]["kill"]++;
+			} elseif(($round->win_type == "bombdefused")) {
+				$stats["team_b"]["bomb_defused"]++;
+				$stats["team_a"]["bomb_planted_loose"]++;
+			} elseif($round->win_type == "saved") {
+				$stats["team_b"]["time"]++;
+			} elseif(($round->win_type == "bombeexploded")) {
+				$stats["team_b"]["bomb_explosed"]++;
+			}
+		}
+
+
+		if(($round->team_win == "a") && ($last != $win)) {
+			if($round_current > $round_b) {
+				$round_b = $round_current;
+			}
+		} elseif(($round->team_win == "b") && ($last != $win)) {
+			if($round_current > $round_a) {
+				$round_a = $round_current;
+			}
+		}
+
+		if($last == $win) {
+			$round_current++;
+			$data[$i]["type"] = $win;
+			@$data[$i]["value"]++;
+		} else {
+			$data[++$i] = array("type" => $win, "value" => 1);
+			$round_current = 1;
+		}
+
+		$count++;
+		if($count == $match->max_round) {
+			$data[++$i] = array("type" => "seperator", "value" => 1);
+			++$i;
+		}
+		$last = $win;
 	}
 
-	if($round->team_win == "a") {
-		if(($round->win_type == "normal") && $round->t_win && $round->bomb_planted) {
-			$stats["team_a"]["bomb_planted_win"]++;
-		} elseif(($round->win_type == "normal") && !$round->bomb_planted) {
-			$stats["team_a"]["kill"]++;
-		} elseif(($round->win_type == "bombdefused")) {
-			$stats["team_a"]["bomb_defused"]++;
-			$stats["team_b"]["bomb_planted_loose"]++;
-		} elseif($round->win_type == "saved") {
-			$stats["team_a"]["time"]++;
-		} elseif(($round->win_type == "bombeexploded")) {
-			$stats["team_a"]["bomb_explosed"]++;
-		}
-	}
-
-	if($round->team_win == "b") {
-		if(($round->win_type == "normal") && $round->t_win && $round->bomb_planted) {
-			$stats["team_b"]["bomb_planted_win"]++;
-		} elseif(($round->win_type == "normal") && !$round->bomb_planted) {
-			$stats["team_b"]["kill"]++;
-		} elseif(($round->win_type == "bombdefused")) {
-			$stats["team_b"]["bomb_defused"]++;
-			$stats["team_a"]["bomb_planted_loose"]++;
-		} elseif($round->win_type == "saved") {
-			$stats["team_b"]["time"]++;
-		} elseif(($round->win_type == "bombeexploded")) {
-			$stats["team_b"]["bomb_explosed"]++;
-		}
-	}
-
-
-	if(($round->team_win == "a") && ($last != $win)) {
-		if($round_current > $round_b) {
-			$round_b = $round_current;
-		}
-	} elseif(($round->team_win == "b") && ($last != $win)) {
+	if($last == "ct") {
 		if($round_current > $round_a) {
 			$round_a = $round_current;
 		}
-	}
-
-	if($last == $win) {
-		$round_current++;
-		$data[$i]["type"] = $win;
-		@$data[$i]["value"]++;
 	} else {
-		$data[++$i] = array("type" => $win, "value" => 1);
-		$round_current = 1;
+		if($round_current > $round_b) {
+			$round_b = $round_current;
+		}
 	}
 
-	$count++;
-	if($count == $match->max_round) {
-		$data[++$i] = array("type" => "seperator", "value" => 1);
-		++$i;
-	}
-	$last = $win;
-}
 
-if($last == "ct") {
-	if($round_current > $round_a) {
-		$round_a = $round_current;
-	}
-} else {
-	if($round_current > $round_b) {
-		$round_b = $round_current;
-	}
-}
-
-
-$size = 450 / ($match->max_round * 2 + 1);
+	$size = 450 / ($match->max_round * 2 + 1);
 ?>
 
 	<table border="0" cellpadding="5" cellspacing="5" width="100%">
@@ -133,7 +133,7 @@ $size = 450 / ($match->max_round * 2 + 1);
 										</div>
 									<?php else: ?>
 										<div <?php if($d["value"] > 1) :
-										     $class = "needTips"; ?>title="<?php echo $d["value"]; ?> <?= Yii::t('app', "rounds"); ?>"<?php endif; ?>
+											     $class = "needTips"; ?>title="<?php echo $d["value"]; ?> <?= Yii::t('app', "rounds"); ?>"<?php endif; ?>
 										     class="progress-bar <?php echo ($d["type"] == "ct")? "" : "progress-bar-danger"; ?> <?php echo $class; ?>"
 										     style="width: <?php echo $size * $d["value"]; ?>px;"></div>
 									<?php endif; ?>
@@ -293,62 +293,62 @@ $size = 450 / ($match->max_round * 2 + 1);
 				<?php $first = true; ?>
 				<?php foreach($rounds as $round): ?>
 					<div class="item <?php if($first) echo "active";
-					$first = false; ?>" style="margin-left: 50px; margin-right: 50px;">
+						$first = false; ?>" style="margin-left: 50px; margin-right: 50px;">
 						<div style="width: 90%; height: 340px; margin:auto;">
 							<div id="canvas-<?php echo $round->round_id; ?>" style="width: 100%; position: relative;">
 							</div>
 							<?php
-							$eventArray = array();
-							$events = Round::find()->where(["map_id" => $match->currentMap->id])->andWhere(["round_id" => $round->round_id])->orderBy('event_time')->all();
-							foreach($events as $event) {
-								$color = "#000";
-								$text = $event->event_name;
-								if($event->event_name == "round_start") {
-									$text = "Round start";
-								} elseif($event->event_name == "kill") {
-									$color = "#F00";
-									$kill = $event->kill;
-									if(!$kill) {
-										continue;
+								$eventArray = array();
+								$events = Round::find()->where(["map_id" => $match->currentMap->id])->andWhere(["round_id" => $round->round_id])->orderBy('event_time')->all();
+								foreach($events as $event) {
+									$color = "#000";
+									$text = $event->event_name;
+									if($event->event_name == "round_start") {
+										$text = "Round start";
+									} elseif($event->event_name == "kill") {
+										$color = "#F00";
+										$kill = $event->kill;
+										if(!$kill) {
+											continue;
+										}
+										$text = $kill->killer_name . " killed " . $kill->killed_name . " with " . $kill->weapon;
+									} elseif($event->event_name == "round_end") {
+										$text = "End of the round";
+									} elseif($event->event_name == "bomb_planting") {
+										$color = "#A00";
+										$text = "Bomb has been planted";
+									} elseif($event->event_name == "bomb_defusing") {
+										$color = "#A00";
+										$text = "Started bomb defusing";
+									} elseif($event->event_name == "1vx") {
+										$data = unserialize($event->event_text);
+										$color = "#00F";
+										$text = "Situation 1v" . $data["situation"];
+									} elseif($event->event_name == "bomb_defused") {
+										$text = "Bomb has been defused";
+									} elseif($event->event_name == "1vx_ok") {
+										$text = "Clutch 1vx succeed";
+									} elseif($event->event_name == "1v1") {
+										$text = "Situation 1v1";
+									} elseif($event->event_name == "bomb_exploded") {
+										$text = "Bomb exploded";
 									}
-									$text = $kill->killer_name . " killed " . $kill->killed_name . " with " . $kill->weapon;
-								} elseif($event->event_name == "round_end") {
-									$text = "End of the round";
-								} elseif($event->event_name == "bomb_planting") {
-									$color = "#A00";
-									$text = "Bomb has been planted";
-								} elseif($event->event_name == "bomb_defusing") {
-									$color = "#A00";
-									$text = "Started bomb defusing";
-								} elseif($event->event_name == "1vx") {
-									$data = unserialize($event->event_text);
-									$color = "#00F";
-									$text = "Situation 1v" . $data["situation"];
-								} elseif($event->event_name == "bomb_defused") {
-									$text = "Bomb has been defused";
-								} elseif($event->event_name == "1vx_ok") {
-									$text = "Clutch 1vx succeed";
-								} elseif($event->event_name == "1v1") {
-									$text = "Situation 1v1";
-								} elseif($event->event_name == "bomb_exploded") {
-									$text = "Bomb exploded";
-								}
 
-								if(count($eventArray) > 0) {
-									$e = array_pop($eventArray);
-									if($e["time"] == $event->event_name) {
-										$e["text"] .= " $text";
-										$e["color"] = $color;
+									if(count($eventArray) > 0) {
+										$e = array_pop($eventArray);
+										if($e["time"] == $event->event_name) {
+											$e["text"] .= " $text";
+											$e["color"] = $color;
+											$eventArray[] = $e;
+											continue;
+										}
 										$eventArray[] = $e;
-										continue;
 									}
-									$eventArray[] = $e;
+									$eventArray[] = array(
+										"type" => $event->event_name, "time" => $event->event_time, "color" => $color,
+										"text" => "" . $event->event_time . "s : " . $text,
+									);
 								}
-								$eventArray[] = array(
-									"type" => $event->event_name, "time" => $event->event_time, "color" => $color,
-									"text" => "" . $event->event_time . "s : " . $text,
-								);
-							}
 							?>
 
 							<script>
@@ -363,11 +363,11 @@ $size = 450 / ($match->max_round * 2 + 1);
 												<th width="200"><?= Yii::t('app', "Winner"); ?></th>
 												<td>
 													<?php
-													if($round->team_win == "a") {
-														echo $match->teamA? $match->teamA->name : $match->team_a_name;
-													} else {
-														echo $match->teamB? $match->teamB->name : $match->team_b_name;
-													}
+														if($round->team_win == "a") {
+															echo $match->teamA? $match->teamA->name : $match->team_a_name;
+														} else {
+															echo $match->teamB? $match->teamB->name : $match->team_b_name;
+														}
 													?>
 												</td>
 											</tr>
@@ -375,20 +375,20 @@ $size = 450 / ($match->max_round * 2 + 1);
 												<th width="200"><?= Yii::t('app', "Victory by"); ?></th>
 												<td>
 													<?php
-													switch ($round->win_type) {
-														case "bombdefused":
-															echo Yii::t('app', "Bomb defused");
-															break;
-														case "bombeexploded":
-															echo Yii::t('app', "Bomb exploded");
-															break;
-														case "normal":
-															echo Yii::t('app', "Total Elimination");
-															break;
-														case "saved":
-															echo Yii::t('app', "Out of Time");
-															break;
-													}
+														switch ($round->win_type) {
+															case "bombdefused":
+																echo Yii::t('app', "Bomb defused");
+																break;
+															case "bombeexploded":
+																echo Yii::t('app', "Bomb exploded");
+																break;
+															case "normal":
+																echo Yii::t('app', "Total Elimination");
+																break;
+															case "saved":
+																echo Yii::t('app', "Out of Time");
+																break;
+														}
 													?>
 												</td>
 											</tr>
@@ -434,13 +434,13 @@ $size = 450 / ($match->max_round * 2 + 1);
 												<tr>
 													<td width="250">
 														<?php
-														if($kill->killer_team == "CT") {
-															$color = "blue";
-														} elseif($kill->killer_team == "TERRORIST") {
-															$color = "red";
-														} else {
-															$color = "black";
-														}
+															if($kill->killer_team == "CT") {
+																$color = "blue";
+															} elseif($kill->killer_team == "TERRORIST") {
+																$color = "red";
+															} else {
+																$color = "black";
+															}
 														?>
 														<span style="color: <?php echo $color; ?>"><?php echo $kill->killer_name; ?></span>
 													</td>
@@ -456,13 +456,13 @@ $size = 450 / ($match->max_round * 2 + 1);
 
 													<td>
 														<?php
-														if($kill->killed_team == "CT") {
-															$color = "blue";
-														} elseif($kill->killed_team == "TERRORIST") {
-															$color = "red";
-														} else {
-															$color = "black";
-														}
+															if($kill->killed_team == "CT") {
+																$color = "blue";
+															} elseif($kill->killed_team == "TERRORIST") {
+																$color = "red";
+															} else {
+																$color = "black";
+															}
 														?>
 														<span style="color: <?php echo $color; ?>"><?php echo $kill->killed_name; ?></span>
 													</td>

@@ -1,14 +1,14 @@
 <?php
 
-use yii\helpers\Html;
-use yii\grid\GridView;
+	use yii\helpers\Html;
+	use yii\grid\GridView;
 
-/* @var $this yii\web\View */
-/* @var $searchModel app\models\PlayersSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
+	/* @var $this yii\web\View */
+	/* @var $searchModel app\models\PlayersSearch */
+	/* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Players');
-$this->params['breadcrumbs'][] = $this->title;
+	$this->title = Yii::t('app', 'Players');
+	$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="players-index">
 
