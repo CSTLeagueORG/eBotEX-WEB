@@ -1,8 +1,8 @@
-#eBotEX WEB Panel
+# eBotEX WEB Panel
 
  - **Author**: Sergey "PolarWolf" Zhirov (@CodersGit)
  - **Version**: 0.1
- - **Website**: [БлогКодера.РФ](http://БлогКодера.РФ)
+ - **Website**: [CSTLeague.ORG](https://cstleague.org)
  - **Wiki**: [github.com/CodersGit/eBotEX-WEB/wiki](https://github.com/CodersGit/eBotEX-WEB/wiki)
 
 ## License 
@@ -15,7 +15,7 @@
 
 ### New features
 
- - [ ] Authorisation with _Steam_
+ - [x] Authorisation with _Steam_
  - [ ] Team and players association
  - [ ] Map veto for players
  - [ ] BO3 matches

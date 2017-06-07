@@ -216,15 +216,49 @@
 		'columns'      => [
 			'id',
 			[
-				'attribute'      => Yii::t('app', 'Teams and score'),
+				'attribute'      => Yii::t('app', 'Team A'),
+				'format'         => 'raw',
+				'contentOptions' => ['class' => 'text-left'],
+				'headerOptions'  => ['class' => 'text-left'],
+				'value'          => function (Matches $model) {
+					return "
+						<span class=\"" . (($model->currentMap->current_side == 'ct')? 'text-primary' : 'text-warning') . "\">
+							" . (($model->teamA)? $model->teamA->name : $model->team_a_name) . "
+						</span>
+						" . ((strlen($model->team_a_flag) == 2)? '<i class="teamflag teamflag-' . strtolower($model->team_a_flag) . '"></i> ' : '') . "
+					";
+				}
+			],
+			[
+				'attribute'      => Yii::t('app', 'Score'),
 				'format'         => 'raw',
 				'contentOptions' => ['class' => 'text-center'],
 				'headerOptions'  => ['class' => 'text-center'],
 				'value'          => function (Matches $model) {
-					return $this->render('_cell_teams_score', [
-						'model' => $model,
-					]);
-				},
+					return "
+						<span class=\"" . (($model->score_a <= $model->score_b)? ($model->score_a == $model->score_b)? '' : 'text-danger' : 'text-success') . "\">
+							" . $model->score_a . "
+						</span>
+						—
+						<span class=\"" . (($model->score_b <= $model->score_a)? ($model->score_a == $model->score_b)? '' : 'text-danger' : 'text-success') . "\">
+							" . $model->score_b . "
+						</span>
+					";
+				}
+			],
+			[
+				'attribute'      => Yii::t('app', 'Team B'),
+				'format'         => 'raw',
+				'contentOptions' => ['class' => 'text-right'],
+				'headerOptions'  => ['class' => 'text-right'],
+				'value'          => function (Matches $model) {
+					return "
+						" . ((strlen($model->team_b_flag) == 2)? '<i class="teamflag teamflag-' . strtolower($model->team_b_flag) . '"></i>' : '') . "
+						<span class=\"" . (($model->currentMap->current_side == 'ct')? 'text-warning' : 'text-primary') . "\">
+							" . (($model->teamB)? $model->teamB->name : $model->team_b_name) . "
+						</span>
+					";
+				}
 			],
 			[
 				'attribute' => Yii::t('app', 'Connect link'),
