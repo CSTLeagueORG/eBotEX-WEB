@@ -56,6 +56,14 @@
 					else if (data['message'] == 'streamerReady') {
 						$('.streamer_' + data['id']).addClass('disabled');
 						$('#loading_' + data['id']).hide();
+						new PNotify({
+							title: 'Streamers are ready now',
+							type: 'info',
+							text: $("#team_a-" + data['id']).text() + " vs " + $("#team_b-" + data['id']).text(),
+							desktop: {
+								desktop: true
+							}
+						});
 					}
 					else if (data['message'] == 'status') {
 						if (data['content'] == 'Finished') {
@@ -81,7 +89,7 @@
 									desktop: true
 								}
 							});
-							$("#flag-" + data['id']).attr('src', "/images/icons/flag_yellow.png");
+							$("#flag-" + data['id']).attr('class', "label label-warning");
 							if (getSessionStorageValue('sound') == "on")
 								$("#soundHandle").trigger('play');
 						}
@@ -94,16 +102,16 @@
 									desktop: true
 								}
 							});
-							$("#flag-" + data['id']).attr('src', "/images/icons/flag_green.png");
+							$("#flag-" + data['id']).attr('class', "label label-success");
 							if (getSessionStorageValue('sound') == "on")
 								$("#soundHandle").trigger('play');
 						}
 						else if (data['content'] != 'Starting') {
-							if ($("#flag-" + data['id']).attr('src') == "/images/icons/flag_red.png") {
+							if ($("#flag-" + data['id']).attr('class') == "label label-danger") {
 								location.reload();
 							}
 							else {
-								$("#flag-" + data['id']).attr('src', "/images/icons/flag_green.png");
+								$("#flag-" + data['id']).attr('class', "label label-success");
 								$('#loading_' + data['id']).hide();
 							}
 							$("div.status-" + data['id']).html(data['content']);
@@ -127,20 +135,19 @@
 						}
 
 						if (data['scoreA'] == data['scoreB'])
-							$("#score-" + data['id']).html("<font color=\"blue\">" + data['scoreA'] + "</font> - <font color=\"blue\">" + data['scoreB'] + "</font>");
+							$("#score-" + data['id']).html("<span>" + data['scoreA'] + "</span> — <span>" + data['scoreB'] + "</span>");
 						else if (data['scoreA'] > data['scoreB'])
-							$("#score-" + data['id']).html("<font color=\"green\">" + data['scoreA'] + "</font> - <font color=\"red\">" + data['scoreB'] + "</font>");
+							$("#score-" + data['id']).html("<span class=\"text-success\">" + data['scoreA'] + "</span> — <span class=\"text-danger\">" + data['scoreB'] + "</span>");
 						else if (data['scoreA'] < data['scoreB'])
-							$("#score-" + data['id']).html("<font color=\"red\">" + data['scoreA'] + "</font> - <font color=\"green\">" + data['scoreB'] + "</font>");
+							$("#score-" + data['id']).html("<span class=\"text-danger\">" + data['scoreA'] + "</span> — <span class=\"text-success\">" + data['scoreB'] + "</span>");
 					}
 					else if (data['message'] == 'teams') {
 						if (data['teamA'] == 'ct') {
-							$("#team_a-" + data['id']).html("<font color='blue'>" + $("#team_a-" + data['id']).text() + "</font>")
-							$("#team_b-" + data['id']).html("<font color='red'>" + $("#team_b-" + data['id']).text() + "</font>")
-						}
-						else {
-							$("#team_a-" + data['id']).html("<font color='red'>" + $("#team_a-" + data['id']).text() + "</font>")
-							$("#team_b-" + data['id']).html("<font color='blue'>" + $("#team_b-" + data['id']).text() + "</font>")
+							$("#team_a-" + data['id']).html("<span class='text-primary'>" + $("#team_a-" + data['id']).text() + "</span>")
+							$("#team_b-" + data['id']).html("<span class='text-warning'>" + $("#team_b-" + data['id']).text() + "</span>")
+						} else {
+							$("#team_a-" + data['id']).html("<span class='text-warning'>" + $("#team_a-" + data['id']).text() + "</span>")
+							$("#team_b-" + data['id']).html("<span class='text-primary'>" + $("#team_b-" + data['id']).text() + "</span>")
 						}
 					}
 					else if (data['message'] == 'currentMap') {
@@ -218,21 +225,31 @@
 			[
 				'attribute'      => Yii::t('app', 'Team A'),
 				'format'         => 'raw',
-				'contentOptions' => ['class' => 'text-left'],
+				'contentOptions' => function (Matches $model) {
+					return [
+						'class' => 'text-left',
+						'id' => 'team_a-' . $model->id,
+					];
+				},
 				'headerOptions'  => ['class' => 'text-left'],
 				'value'          => function (Matches $model) {
 					return "
 						<span class=\"" . (($model->currentMap->current_side == 'ct')? 'text-primary' : 'text-warning') . "\">
 							" . (($model->teamA)? $model->teamA->name : $model->team_a_name) . "
+							" . ((strlen($model->team_a_flag) == 2)? '<i class="teamflag teamflag-' . strtolower($model->team_a_flag) . '"></i> ' : '') . "
 						</span>
-						" . ((strlen($model->team_a_flag) == 2)? '<i class="teamflag teamflag-' . strtolower($model->team_a_flag) . '"></i> ' : '') . "
 					";
 				}
 			],
 			[
 				'attribute'      => Yii::t('app', 'Score'),
 				'format'         => 'raw',
-				'contentOptions' => ['class' => 'text-center'],
+				'contentOptions' => function (Matches $model) {
+					return [
+						'class' => 'text-center',
+						'id' => 'score-' . $model->id,
+					];
+				},
 				'headerOptions'  => ['class' => 'text-center'],
 				'value'          => function (Matches $model) {
 					return "
@@ -249,12 +266,17 @@
 			[
 				'attribute'      => Yii::t('app', 'Team B'),
 				'format'         => 'raw',
-				'contentOptions' => ['class' => 'text-right'],
+				'contentOptions' => function (Matches $model) {
+					return [
+						'class' => 'text-right',
+						'id' => 'team_b-' . $model->id,
+					];
+				},
 				'headerOptions'  => ['class' => 'text-right'],
 				'value'          => function (Matches $model) {
 					return "
-						" . ((strlen($model->team_b_flag) == 2)? '<i class="teamflag teamflag-' . strtolower($model->team_b_flag) . '"></i>' : '') . "
 						<span class=\"" . (($model->currentMap->current_side == 'ct')? 'text-warning' : 'text-primary') . "\">
+							" . ((strlen($model->team_b_flag) == 2)? '<i class="teamflag teamflag-' . strtolower($model->team_b_flag) . '"></i>' : '') . "
 							" . (($model->teamB)? $model->teamB->name : $model->team_b_name) . "
 						</span>
 					";
@@ -271,7 +293,7 @@
 				'attribute' => Yii::t('app', 'Season'),
 				'format'    => 'raw',
 				'value'     => function (Matches $model) {
-					return ($model->season)? $model->season->name : Yii::t('app', 'Not defined');
+					return ($model->season)? $model->season->name : '';
 				},
 			],
 			[
@@ -280,9 +302,9 @@
 				'value'     => function (Matches $model) {
 					$result = '';
 					if(($model->status == 0 or $model->status == 13 or !$model->enable) and $model->status != 14) {
-						$result = "<div class='label label-danger'><i class='glyphicon glyphicon-flag'></i></div> ";
+						$result = "<div class='label label-danger' id='flag-{$model->id}'><i class='glyphicon glyphicon-flag'></i></div> ";
 					} elseif($model->status > 0 and $model->status < 13) {
-						$result = ($model->is_paused)? "<div class='label label-warning'><i class='glyphicon glyphicon-flag'></i></div> " : "<div class='label label-success'><i class='glyphicon glyphicon-flag'></i></div> ";
+						$result = ($model->is_paused)? "<div class='label label-warning' id='flag-{$model->id}'><i class='glyphicon glyphicon-flag'></i></div> " : "<div class='label label-success' id='flag-{$model->id}'><i class='glyphicon glyphicon-flag'></i></div> ";
 					}
 					switch ($model->status) {
 						case 0:

@@ -4,6 +4,7 @@
 		'anyone_is_admin'             => false, // gives rights to add servers and create matches to everyone
 		'bot_ip'                      => '127.0.0.1', // IP of second part of eBotEX
 		'bot_port'                    => '12360', // it's port
+		'ssl_enabled'                  => false, // true if websocket using https
 		'demo_download'               => true, // download matches demos after game&
 		'demo_path'                   => '../../eBotEX-CSGO/demos', // path to folder with demos
 		'default_max_round'           => 15, // default max rounds in half

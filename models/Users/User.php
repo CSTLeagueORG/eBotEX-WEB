@@ -55,7 +55,7 @@
 			}
 		}
 
-		function randString ($pass_len = 50) {
+		static function randString ($pass_len = 50) {
 			$allchars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 			$string = "";
 			mt_srand((double) microtime() * 1000000);
