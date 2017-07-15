@@ -78,12 +78,12 @@
 			$user = Users::findOne(['steamid' => self::ToSteamID($service->getAttribute('steamid'))]);
 
 			if(!$user) {
-				$user = new Users;
+				$user = new Users();
 				$user->nickname = $service->getAttribute('name');
 				$user->steamid = self::ToSteamID($service->getAttribute('steamid'));
 				$user->country = $service->getAttribute('loccountrycode');
 				$user->is_admin = (Users::find()->count() == 0)? 1 : 0;
-				$user->insert();
+				$user->save();
 			}
 
 			$id = $service->getId();

@@ -31,7 +31,7 @@
 		 */
 		public function rules () {
 			return [
-				[['steamid', 'nickname', 'is_admin', 'country', 'name', 'last_name'], 'required'],
+				[['steamid', 'nickname', 'is_admin', 'country'], 'required'],
 				[['is_admin'], 'integer'],
 				[['steamid'], 'string', 'max' => 255],
 				[['nickname'], 'string', 'max' => 25],
