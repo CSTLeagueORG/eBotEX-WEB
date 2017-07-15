@@ -2,11 +2,13 @@
 
 	namespace app\controllers;
 
+	use app\models\Matches\Maps;
 	use app\models\Matches\MatchesForm;
 	use Yii;
 	use app\models\Matches\Matches;
 	use app\models\Matches\MatchesSearch;
 	use yii\web\Controller;
+	use yii\web\ForbiddenHttpException;
 	use yii\web\NotFoundHttpException;
 	use yii\filters\VerbFilter;
 
@@ -95,6 +97,9 @@
 		 * @return mixed
 		 */
 		public function actionCreate () {
+			if(Yii::$app->user->isGuest or !Yii::$app->user->identity->is_admin) {
+				throw new ForbiddenHttpException('You must be admin');
+			}
 			$model = new MatchesForm();
 
 			if($model->load(Yii::$app->request->post()) && $model->createMatch()) {
@@ -114,6 +119,9 @@
 		 * @return mixed
 		 */
 		public function actionUpdate ($id) {
+			if(Yii::$app->user->isGuest or !Yii::$app->user->identity->is_admin) {
+				throw new ForbiddenHttpException('You must be admin');
+			}
 			$model = new MatchesForm();
 
 			$model->loadMatch($match = Matches::find()->where(['id' => $id])->one());
@@ -135,7 +143,56 @@
 		 * @return mixed
 		 */
 		public function actionDelete ($id) {
+			if(Yii::$app->user->isGuest or !Yii::$app->user->identity->is_admin) {
+				throw new ForbiddenHttpException('You must be admin');
+			}
 			$this->findModel($id)->delete();
+
+			return $this->redirect(['index']);
+		}
+
+		/**
+		 * Duplicates an existing Matches model.
+		 * If duplication is successful, the browser will be redirected to the 'index' page.
+		 *
+		 * @param string $id
+		 * @return mixed
+		 */
+		public function actionDuplicate ($id) {
+			if(Yii::$app->user->isGuest or !Yii::$app->user->identity->is_admin) {
+				throw new ForbiddenHttpException('You must be admin');
+			}
+			$originalMatch = $this->findModel($id);
+			$match = new Matches();
+			$match->attributes = $originalMatch->attributes;
+			$match->status = 0;
+			$match->score_a = 0;
+			$match->score_b = 0;
+			$match->is_paused = null;
+			$match->enable = 0;
+			$match->ingame_enable = null;
+			$match->config_authkey = MatchesForm::randString(127);
+			$match->created_at = date('Y-m-d H:i:s');
+			$match->updated_at = date('Y-m-d H:i:s');
+			$match->insert();
+
+			foreach($originalMatch->maps as $originalMap) {
+				$map = new Maps();
+				$map->attributes = $originalMap->attributes;
+				$map->match_id = $match->id;
+				$map->score_1 = 0;
+				$map->score_2 = 0;
+				$map->status = 0;
+				$map->tv_record_file = null;
+				$map->created_at = date('Y-m-d H:i:s');
+				$map->updated_at = date('Y-m-d H:i:s');
+				$map->save();
+			}
+
+			$match->refresh();
+			$match->current_map = $match->maps[0]->id;
+			$match->updated_at = date('Y-m-d H:i:s');
+			$match->save();
 
 			return $this->redirect(['index']);
 		}

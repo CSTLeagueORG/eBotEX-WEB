@@ -2,6 +2,7 @@
 
 	namespace app\controllers;
 
+	use phpDocumentor\Reflection\Types\Null_;
 	use Yii;
 	use app\models\Teams\Teams;
 	use app\models\Teams\TeamsInSeasons;
@@ -9,6 +10,7 @@
 	use yii\web\Controller;
 	use yii\web\NotFoundHttpException;
 	use yii\filters\VerbFilter;
+	use yii\web\ForbiddenHttpException;
 
 	/**
 	 * TeamsController implements the CRUD actions for Teams model.
@@ -86,6 +88,9 @@
 		 * @return mixed
 		 */
 		public function actionCreate () {
+			if(Yii::$app->user->isGuest or !Yii::$app->user->identity->is_admin) {
+				throw new ForbiddenHttpException('You must be admin');
+			}
 			$model = new Teams();
 
 			if($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -105,6 +110,9 @@
 		 * @return mixed
 		 */
 		public function actionUpdate ($id) {
+			if(Yii::$app->user->isGuest or !Yii::$app->user->identity->is_admin) {
+				throw new ForbiddenHttpException('You must be admin');
+			}
 			$model = $this->findModel($id);
 
 			if($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -124,6 +132,9 @@
 		 * @return mixed
 		 */
 		public function actionDelete ($id) {
+			if(Yii::$app->user->isGuest or !Yii::$app->user->identity->is_admin) {
+				throw new ForbiddenHttpException('You must be admin');
+			}
 			$this->findModel($id)->delete();
 
 			return $this->redirect(['index']);

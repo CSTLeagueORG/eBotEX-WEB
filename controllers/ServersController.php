@@ -8,6 +8,7 @@
 	use yii\web\Controller;
 	use yii\web\NotFoundHttpException;
 	use yii\filters\VerbFilter;
+	use yii\web\ForbiddenHttpException;
 
 	/**
 	 * ServersController implements the CRUD actions for Servers model.
@@ -61,6 +62,9 @@
 		 * @return mixed
 		 */
 		public function actionCreate () {
+			if(Yii::$app->user->isGuest or !Yii::$app->user->identity->is_admin) {
+				throw new ForbiddenHttpException('You must be admin');
+			}
 			$model = new Servers();
 
 			if($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -80,6 +84,9 @@
 		 * @return mixed
 		 */
 		public function actionUpdate ($id) {
+			if(Yii::$app->user->isGuest or !Yii::$app->user->identity->is_admin) {
+				throw new ForbiddenHttpException('You must be admin');
+			}
 			$model = $this->findModel($id);
 
 			if($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -99,6 +106,9 @@
 		 * @return mixed
 		 */
 		public function actionDelete ($id) {
+			if(Yii::$app->user->isGuest or !Yii::$app->user->identity->is_admin) {
+				throw new ForbiddenHttpException('You must be admin');
+			}
 			$this->findModel($id)->delete();
 
 			return $this->redirect(['index']);
