@@ -29,6 +29,7 @@
 		public $depends = [
 			'yii\web\YiiAsset',
 			'yii\bootstrap\BootstrapAsset',
+			'app\assets\AppPNotifyAsset',
 		];
 		public $jsOptions = ['position' => \yii\web\View::POS_HEAD];
 	}

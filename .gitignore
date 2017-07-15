@@ -33,3 +33,4 @@ tests/_support/_generated
 config/ebotex.php
 config/db.php
 config/config.php
+composer.lock
