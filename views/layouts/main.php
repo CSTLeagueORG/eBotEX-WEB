@@ -46,7 +46,7 @@
 		}
 
 		loadingSocketIo = true;
-		$.getScript("://" + socketIoAddress + "/socket.io/socket.io.js", function () {
+		$.getScript("<?php echo Yii::$app->params['ssl_enabled'] ? "https" : "http" ?>://" + socketIoAddress + "/socket.io/socket.io.js", function () {
 			socket = io.connect("<?php echo Yii::$app->params['ssl_enabled'] ? "https" : "http" ?>://" + socketIoAddress);
 			socket.on('connect', function () {
 				socketIoLoaded = true;
