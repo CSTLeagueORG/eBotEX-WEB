@@ -15,8 +15,6 @@
 	 * @property string          $country
 	 * @property string          $name
 	 * @property string          $last_name
-	 *
-	 * @property SessionTokens[] $sessionTokens
 	 */
 	class Users extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface {
 		/**

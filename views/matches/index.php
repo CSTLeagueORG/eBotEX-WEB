@@ -179,12 +179,6 @@
 			}
 		}
 
-		function startMatch(id) {
-			$("#match_id").val(id);
-			$("#match_start").submit();
-			$('#loading_' + id).show();
-		}
-
 		var currentMatchAdmin = 0;
 		$(function () {
 			$(".bo3").popover();
@@ -214,9 +208,11 @@
 	<h1><?= Html::encode($this->title) ?></h1>
 	<?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-	<p>
-		<?= Html::a(Yii::t('app', 'Create new match'), ['create'], ['class' => 'btn btn-success']) ?>
-	</p>
+	<? if(!Yii::$app->user->isGuest and Yii::$app->user->identity->is_admin): ?>
+		<p>
+			<?= Html::a(Yii::t('app', 'Create new match'), ['create'], ['class' => 'btn btn-success']) ?>
+		</p>
+	<? endif ?>
 	<?php Pjax::begin(); ?>
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
@@ -286,7 +282,7 @@
 				'attribute' => Yii::t('app', 'Connect link'),
 				'format'    => 'raw',
 				'value'     => function (Matches $model) {
-					return "<a href=\"steam://connect/{$model->ip}/{$model->config_password}\">{$model->server->hostname}</a>";
+					return $model->server ? "<a href=\"steam://connect/{$model->ip}/{$model->config_password}\">{$model->server->hostname}</a>" : 'Random';
 				},
 			],
 			[
@@ -301,7 +297,9 @@
 				'format'    => 'raw',
 				'value'     => function (Matches $model) {
 					$result = '';
-					if(($model->status == 0 or $model->status == 13 or !$model->enable) and $model->status != 14) {
+					if(($model->status == 1 and $model->enable) and $model->status != 14) {
+						$result = "<div class='label label-primary' id='flag-{$model->id}'><i class='glyphicon glyphicon-flag'></i></div> ";
+					} elseif(($model->status == 0 or $model->status == 13 or !$model->enable) and $model->status != 14) {
 						$result = "<div class='label label-danger' id='flag-{$model->id}'><i class='glyphicon glyphicon-flag'></i></div> ";
 					} elseif($model->status > 0 and $model->status < 13) {
 						$result = ($model->is_paused)? "<div class='label label-warning' id='flag-{$model->id}'><i class='glyphicon glyphicon-flag'></i></div> " : "<div class='label label-success' id='flag-{$model->id}'><i class='glyphicon glyphicon-flag'></i></div> ";
@@ -368,49 +366,53 @@
 					$result .= "
 							<a href='$url'><i class='fa fa-eye'></i></a>
 						";
-					if($model->status < 13 and !$model->enable) {
-						$url = Url::toRoute(['matches/play', 'id' => (string) $model->id]);
+					if(!Yii::$app->user->isGuest and Yii::$app->user->identity->is_admin and ($model->status < 13 and !$model->enable)) {
+						$url = Url::toRoute(['matches/start', 'id' => (string) $model->id]);
 						$result .= "
 							<a href='$url'><i class='fa fa-play'></i></a>
 						";
 					}
-					if($model->enable and $model->is_paused) {
-						$url = Url::toRoute(['matches/unpause', 'id' => (string) $model->id]);
+//					if(!Yii::$app->user->isGuest and Yii::$app->user->identity->is_admin and ($model->enable and $model->is_paused)) {
+//						$url = Url::toRoute(['matches/unpause', 'id' => (string) $model->id]);
+//						$result .= "
+//							<a href='$url'><i class='fa fa-play'></i></a>
+//						";
+//					}
+//					if(!Yii::$app->user->isGuest and Yii::$app->user->identity->is_admin and ($model->enable and !$model->ingame_enable)) {
+//						$url = Url::toRoute(['matches/continue', 'id' => (string) $model->id]);
+//						$result .= "
+//							<a href='$url'><i class='fa fa-play'></i></a>
+//						";
+//					}
+					if(!Yii::$app->user->isGuest and Yii::$app->user->identity->is_admin and ($model->enable and !$model->is_paused)) {
 						$result .= "
-							<a href='$url'><i class='fa fa-play'></i></a>
+							<a onclick=\"doRequest('pauseunpause', '{$model->ip}', '{$model->id}', '{$model->config_authkey}')\"><i class='fa fa-pause'></i></a>
 						";
 					}
-					if($model->enable and !$model->ingame_enable) {
-						$url = Url::toRoute(['matches/continue', 'id' => (string) $model->id]);
+					if(!Yii::$app->user->isGuest and Yii::$app->user->identity->is_admin and ($model->enable)) {
 						$result .= "
-							<a href='$url'><i class='fa fa-play'></i></a>
+							<a onclick=\"doRequest('stop', '{$model->ip}', '{$model->id}', '{$model->config_authkey}')\"><i class='fa fa-stop'></i></a>
 						";
 					}
-					if($model->enable and !$model->is_paused) {
-						$url = Url::toRoute(['matches/pause', 'id' => (string) $model->id]);
-						$result .= "
-							<a href='$url'><i class='fa fa-pause'></i></a>
-						";
-					}
-					if($model->enable) {
-						$url = Url::toRoute(['matches/stop', 'id' => (string) $model->id]);
-						$result .= "
-							<a href='$url'><i class='fa fa-stop'></i></a>
-						";
-					}
-					if(!$model->enable and $model->status < 2) {
+					if(!Yii::$app->user->isGuest and Yii::$app->user->identity->is_admin and (!$model->enable and $model->status < 2)) {
 						$url = Url::toRoute(['matches/update', 'id' => (string) $model->id]);
 						$result .= "
 							<a href='$url'><i class='fa fa-edit'></i></a>
 						";
 					}
-					if(!$model->enable and $model->status == 13) {
+					if(!Yii::$app->user->isGuest and Yii::$app->user->identity->is_admin) {
+						$url = Url::toRoute(['matches/duplicate', 'id' => (string) $model->id]);
+						$result .= "
+							<a href='$url'><i class='fa fa-files-o'></i></a>
+						";
+					}
+					if(!Yii::$app->user->isGuest and Yii::$app->user->identity->is_admin and (!$model->enable and $model->status == 13)) {
 						$url = Url::toRoute(['matches/archive', 'id' => (string) $model->id]);
 						$result .= "
 							<a href='$url'><i class='fa fa-archive'></i></a>
 						";
 					}
-					if(!$model->enable) {
+					if(!Yii::$app->user->isGuest and Yii::$app->user->identity->is_admin and (!$model->enable)) {
 						$url = Url::toRoute(['matches/delete', 'id' => (string) $model->id]);
 						$result .= "
 							<a href='$url'><i class='fa fa-trash'></i></a>

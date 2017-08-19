@@ -4,6 +4,7 @@
 
 	use app\models\Matches\Maps;
 	use app\models\Matches\MatchesForm;
+	use app\models\Servers\Servers;
 	use Yii;
 	use app\models\Matches\Matches;
 	use app\models\Matches\MatchesSearch;
@@ -148,6 +149,51 @@
 			}
 			$this->findModel($id)->delete();
 
+			return $this->redirect(['index']);
+		}
+
+		/**
+		 * Starts an existing Matches model.
+		 * If start is successful, the browser will be redirected to the 'index' page.
+		 *
+		 * @param string $id
+		 * @return mixed
+		 */
+		public function actionStart ($id) {
+			if(Yii::$app->user->isGuest or !Yii::$app->user->identity->is_admin) {
+				throw new ForbiddenHttpException('You must be admin');
+			}
+			$match = $this->findModel($id);
+			if ($match->enable !=0 or $match->status != 0) {
+				if (!Yii::$app->session->hasFlash('success'))
+					Yii::$app->session->setFlash('error', 'This match is already started');
+				return $this->redirect(['index']);
+			}
+			$server = $match->server;
+			if (!$server) {
+				$servers = Servers::find()->all();
+				foreach($servers as $server) {
+					/** @var $server Servers */
+					if (count($server->getMatches()->where('status < 13')->andWhere('status > 0')->all()) == 0)
+						break;
+				}
+			}
+
+			if (count($server->getMatches()->where('status < 13')->andWhere('status > 0')->all()) != 0) {
+				Yii::$app->session->setFlash('error', 'Can\'t find empty server');
+				return $this->redirect(['index']);
+			}
+
+			$match->ip = $server->ip;
+			$match->server_id = $server->id;
+			$match->enable = 1;
+			$match->status = 1;
+			$match->score_a = 0;
+			$match->score_b = 0;
+			if ($match->config_authkey == '')
+				$match->config_authkey = uniqid(mt_rand(), true);
+			$match->save();
+			Yii::$app->session->setFlash('success', "Match will be started on" . " " . $server->ip);
 			return $this->redirect(['index']);
 		}
 
