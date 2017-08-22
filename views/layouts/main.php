@@ -178,15 +178,15 @@
 							'items'   => [
 								['label' => 'Home', 'url' => ['/main/index']],
 								('
-								<li>
-									<div class="input-group" style="margin: 5px;">
-										<input class="form-control" id="match_id_go" size="16" type="text" placeholder="' . Yii::t('app', "Match id") . '">
-										<span class="input-group-btn">
-											<button class="btn btn-default" type="button" onclick="goToMatch();">' . Yii::t('app', "Go") . '</button>
-										</span>
-									</div>
-								</li>
-							'),
+									<li>
+										<div class="input-group" style="margin: 5px;">
+											<input class="form-control" id="match_id_go" size="16" type="text" placeholder="' . Yii::t('app', "Match id") . '">
+											<span class="input-group-btn">
+												<button class="btn btn-default" type="button" onclick="goToMatch();">' . Yii::t('app', "Go") . '</button>
+											</span>
+										</div>
+									</li>
+								'),
 								['label' => 'Matches', 'url' => ['/matches/index']],
 								['label' => 'Seasons', 'url' => ['/seasons/index']],
 								['label' => 'Statistics', 'url' => ['/stats']],
@@ -200,6 +200,191 @@
 					</div>
 				</div>
 				<? if(!Yii::$app->user->isGuest and Yii::$app->user->identity->is_admin): ?>
+					<script>
+					function doRequest(event, ip, id, authkey) {
+						var data = id + " " + event + " " + ip;
+						data = Aes.Ctr.encrypt(data, authkey, 256);
+						send = JSON.stringify([data, ip]);
+						socket.emit("matchCommandSend", send);
+						$('#loading_' + id).show();
+						return false;
+					}
+
+					var enableNotifScore = false;
+					var lastMatchEnd = 0;
+					function getButtons(match_id) {
+						$.ajax({
+							type: "POST",
+							url: "/admin.php/matchs/actions/" + match_id,
+						}).done(function (msg) {
+							var data = $.parseJSON(msg);
+							var output = "";
+							for (var i = 0; i < data.length; i++) {
+								output += data[i];
+							}
+							$('#matchs-actions-' + match_id).children('td.matchs-actions-container').empty().append(output);
+						});
+					}
+					$(document).ready(function () {
+						PNotify.desktop.permission();
+						initSocketIo(function (socket) {
+							socket.emit("identify", {type: "matchs"});
+							socket.on("matchsHandler", function (data) {
+								var data = jQuery.parseJSON(data);
+								if (data['content'] == 'stop')
+									location.reload();
+								else if (data['message'] == 'button') {
+									getButtons(data['id']);
+									$('#loading_' + data['id']).hide();
+								}
+								else if (data['message'] == 'streamerReady') {
+									$('.streamer_' + data['id']).addClass('disabled');
+									$('#loading_' + data['id']).hide();
+									new PNotify({
+										title: 'Streamers are ready now',
+										type: 'info',
+										text: $("#team_a-" + data['id']).text() + " vs " + $("#team_b-" + data['id']).text(),
+										desktop: {
+											desktop: true
+										}
+									});
+								}
+								else if (data['message'] == 'status') {
+									if (data['content'] == 'Finished') {
+										if (lastMatchEnd != data['id']) {
+											new PNotify({
+												title: 'Match finished',
+												type: 'info',
+												text: $("#team_a-" + data['id']).text() + " vs " + $("#team_b-" + data['id']).text(),
+												desktop: {
+													desktop: true
+												}
+											});
+										}
+										lastMatchEnd = data['id'];
+										location.reload();
+									}
+									else if (data['content'] == 'is_paused') {
+										new PNotify({
+											title: 'Match paused!',
+											type: 'info',
+											text: $("#team_a-" + data['id']).text() + " vs " + $("#team_b-" + data['id']).text(),
+											desktop: {
+												desktop: true
+											}
+										});
+										$("#flag-" + data['id']).attr('class', "label label-warning");
+										if (getSessionStorageValue('sound') == "on")
+											$("#soundHandle").trigger('play');
+									}
+									else if (data['content'] == 'is_unpaused') {
+										new PNotify({
+											title: 'Match unpaused!',
+											type: 'info',
+											text: $("#team_a-" + data['id']).text() + " vs " + $("#team_b-" + data['id']).text(),
+											desktop: {
+												desktop: true
+											}
+										});
+										$("#flag-" + data['id']).attr('class', "label label-success");
+										if (getSessionStorageValue('sound') == "on")
+											$("#soundHandle").trigger('play');
+									}
+									else if (data['content'] != 'Starting') {
+										if ($("#flag-" + data['id']).attr('class') == "label label-danger") {
+											location.reload();
+										}
+										else {
+											$("#flag-" + data['id']).attr('class', "label label-success");
+											$('#loading_' + data['id']).hide();
+										}
+										$("div.status-" + data['id']).html(data['content']);
+									}
+								}
+								else if (data['message'] == 'score') {
+									if (data['scoreA'] < 10)
+										data['scoreA'] = "0" + data['scoreA'];
+									if (data['scoreB'] < 10)
+										data['scoreB'] = "0" + data['scoreB'];
+
+									if (enableNotifScore) {
+										new PNotify({
+											title: 'Score Update',
+											type: 'info',
+											text: $("#team_a-" + data['id']).text() + " (" + data['scoreA'] + ") vs (" + data['scoreB'] + ") " + $("#team_b-" + data['id']).text(),
+											desktop: {
+												desktop: true
+											}
+										});
+									}
+
+									if (data['scoreA'] == data['scoreB'])
+										$("#score-" + data['id']).html("<span>" + data['scoreA'] + "</span> — <span>" + data['scoreB'] + "</span>");
+									else if (data['scoreA'] > data['scoreB'])
+										$("#score-" + data['id']).html("<span class=\"text-success\">" + data['scoreA'] + "</span> — <span class=\"text-danger\">" + data['scoreB'] + "</span>");
+									else if (data['scoreA'] < data['scoreB'])
+										$("#score-" + data['id']).html("<span class=\"text-danger\">" + data['scoreA'] + "</span> — <span class=\"text-success\">" + data['scoreB'] + "</span>");
+								}
+								else if (data['message'] == 'teams') {
+									if (data['teamA'] == 'ct') {
+										$("#team_a-" + data['id']).html("<span class='text-primary'>" + $("#team_a-" + data['id']).text() + "</span>")
+										$("#team_b-" + data['id']).html("<span class='text-warning'>" + $("#team_b-" + data['id']).text() + "</span>")
+									} else {
+										$("#team_a-" + data['id']).html("<span class='text-warning'>" + $("#team_a-" + data['id']).text() + "</span>")
+										$("#team_b-" + data['id']).html("<span class='text-primary'>" + $("#team_b-" + data['id']).text() + "</span>")
+									}
+								}
+								else if (data['message'] == 'currentMap') {
+									$("#map-" + data['id']).html(data['mapname']);
+								}
+							});
+						});
+					});
+				</script>
+					<audio id="soundHandle" style="display: none;"></audio>
+					<script>
+						function getSessionStorageValue(key) {
+							if (sessionStorage) {
+								try {
+									return sessionStorage.getItem(key);
+								} catch (e) {
+									return 0;
+								}
+							}
+							return 0;
+						}
+
+						function setSessionStorageValue(key, value) {
+							if (sessionStorage) {
+								try {
+									return sessionStorage.setItem(key, value);
+								} catch (e) {
+								}
+							}
+						}
+
+						var currentMatchAdmin = 0;
+						$(function () {
+							$(".bo3").popover();
+
+							$.ajax({
+								url: "/images/soundHandle/notify.mp3"
+							}).done(function (data) {
+								$("#soundHandle").attr('src', '/images/soundHandle/notify.mp3');
+							});
+
+							if (getSessionStorageValue("current.selected") != 0) {
+								var value = getSessionStorageValue("current.selected");
+								if ($("[data-id=" + value + "]:first").length == 1) {
+									$("[data-id=" + value + "]:first").click();
+								}
+								else {
+									setSessionStorageValue("current.selected", 0);
+								}
+							}
+						});
+					</script>
+
 					<div class="panel panel-primary">
 						<div class="panel-heading">Websocket status</div>
 						<div class="panel-body">
