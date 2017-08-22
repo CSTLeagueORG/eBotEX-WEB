@@ -143,12 +143,28 @@
 		 * @param string $id
 		 * @return mixed
 		 */
+		public function actionControls ($id) {
+			$model = $this->findModel($id);
+
+			$this->layout = false;
+
+			return $this->render('_match_controls', [
+						'model' => $model,
+			]);
+		}
+
+		/**
+		 * Deletes an existing Matches model.
+		 * If deletion is successful, the browser will be redirected to the 'index' page.
+		 *
+		 * @param string $id
+		 * @return mixed
+		 */
 		public function actionDelete ($id) {
 			if(Yii::$app->user->isGuest or !Yii::$app->user->identity->is_admin) {
 				throw new ForbiddenHttpException('You must be admin');
 			}
 			$this->findModel($id)->delete();
-
 			return $this->redirect(['index']);
 		}
 

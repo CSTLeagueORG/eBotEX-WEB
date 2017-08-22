@@ -109,7 +109,7 @@
 							function goToMatch() {
 								var id = $("#match_id_go").val();
 								if (id > 0)
-									document.location.href = "<?= Yii::$app->urlManager->createAbsoluteUrl("/matches/view/?id="); ?>" + id;
+									document.location.href = "<?= Yii::$app->urlManager->createAbsoluteUrl("/matches/view/"); ?>" + id;
 							}
 
 							function getSessionStorageValue(key) {
@@ -214,8 +214,8 @@
 					var lastMatchEnd = 0;
 					function getButtons(match_id) {
 						$.ajax({
-							type: "POST",
-							url: "/admin.php/matchs/actions/" + match_id,
+							type: "GET",
+							url: "<?= Yii::$app->urlManager->createAbsoluteUrl("/matches/controls/?id="); ?>" + match_id,
 						}).done(function (msg) {
 							var data = $.parseJSON(msg);
 							var output = "";
