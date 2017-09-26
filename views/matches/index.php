@@ -94,7 +94,7 @@
 				'attribute' => Yii::t('app', 'Connect link'),
 				'format'    => 'raw',
 				'value'     => function (Matches $model) {
-					return $model->enable ? $model->server ? "<a href=\"steam://connect/{$model->ip}/{$model->config_password}\">{$model->server->hostname}</a>" : 'Random' : 'Match stopped';
+					return $model->enable ? $model->server ? "<a href=\"steam://connect/{$model->ip}/{$model->config_password}\">{$model->server->hostname}</a>" : Yii::t('app', 'Random') : Yii::t('app', 'Match stopped');
 				},
 			],
 			[

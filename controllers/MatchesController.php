@@ -99,7 +99,7 @@
 		 */
 		public function actionCreate () {
 			if(Yii::$app->user->isGuest or !Yii::$app->user->identity->is_admin) {
-				throw new ForbiddenHttpException('You must be admin');
+				throw new ForbiddenHttpException(Yii::t('app', 'You must be admin'));
 			}
 			$model = new MatchesForm();
 
@@ -121,7 +121,7 @@
 		 */
 		public function actionUpdate ($id) {
 			if(Yii::$app->user->isGuest or !Yii::$app->user->identity->is_admin) {
-				throw new ForbiddenHttpException('You must be admin');
+				throw new ForbiddenHttpException(Yii::t('app', 'You must be admin'));
 			}
 			$model = new MatchesForm();
 
@@ -162,7 +162,7 @@
 		 */
 		public function actionDelete ($id) {
 			if(Yii::$app->user->isGuest or !Yii::$app->user->identity->is_admin) {
-				throw new ForbiddenHttpException('You must be admin');
+				throw new ForbiddenHttpException(Yii::t('app', 'You must be admin'));
 			}
 			$this->findModel($id)->delete();
 			return $this->redirect(['index']);
@@ -177,12 +177,12 @@
 		 */
 		public function actionStart ($id) {
 			if(Yii::$app->user->isGuest or !Yii::$app->user->identity->is_admin) {
-				throw new ForbiddenHttpException('You must be admin');
+				throw new ForbiddenHttpException(Yii::t('app', 'You must be admin'));
 			}
 			$match = $this->findModel($id);
 			if ($match->enable !=0 or $match->status != 0) {
 				if (!Yii::$app->session->hasFlash('success'))
-					Yii::$app->session->setFlash('error', 'This match is already started');
+					Yii::$app->session->setFlash('error', Yii::t('app', 'This match is already started'));
 				return $this->redirect(['index']);
 			}
 			$server = $match->server;
@@ -196,7 +196,7 @@
 			}
 
 			if (count($server->getMatches()->where('status < 13')->andWhere('status > 0')->all()) != 0) {
-				Yii::$app->session->setFlash('error', 'Can\'t find empty server');
+				Yii::$app->session->setFlash('error', Yii::t('app', 'Can\'t find empty server'));
 				return $this->redirect(['index']);
 			}
 
@@ -209,7 +209,7 @@
 			if ($match->config_authkey == '')
 				$match->config_authkey = uniqid(mt_rand(), true);
 			$match->save();
-			Yii::$app->session->setFlash('success', "Match will be started on" . " " . $server->ip);
+			Yii::$app->session->setFlash('success', Yii::t('app', "Match will be started on") . " " . $server->ip);
 			return $this->redirect(['index']);
 		}
 
@@ -222,7 +222,7 @@
 		 */
 		public function actionDuplicate ($id) {
 			if(Yii::$app->user->isGuest or !Yii::$app->user->identity->is_admin) {
-				throw new ForbiddenHttpException('You must be admin');
+				throw new ForbiddenHttpException(Yii::t('app', 'You must be admin'));
 			}
 			$originalMatch = $this->findModel($id);
 			$match = new Matches();
@@ -271,7 +271,7 @@
 			if(($model = Matches::findOne($id)) !== null) {
 				return $model;
 			} else {
-				throw new NotFoundHttpException('The requested page does not exist.');
+				throw new NotFoundHttpException(Yii::t('app', 'The requested pe does not exist.'));
 			}
 		}
 	}
