@@ -114,7 +114,7 @@
 
 			$model->loadMatch($match = Matches::find()->where(['id' => $id])->one());
 			if($model->load(Yii::$app->request->post()) && $model->updateMatch($match)) {
-				return $this->redirect(['view', 'id' => $match->id]);
+				return $this->redirect('index');
 			} else {
 				return $this->render('update', [
 					'model' => $model,

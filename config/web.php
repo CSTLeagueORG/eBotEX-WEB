@@ -91,7 +91,8 @@
 				'class' => 'yii\caching\FileCache',
 			],
 			'user'         => [
-				'identityClass' => 'app\models\Users\Users',
+				'identityClass' => 'app\models\Users\User',
+				'enableAutoLogin' => true
 			],
 			'errorHandler' => [
 				'errorAction' => 'main/error',

@@ -21,10 +21,10 @@
 //					}
 ?>
 <? if(!Yii::$app->user->isGuest and Yii::$app->user->identity->is_admin and ($model->enable and !$model->is_paused)): ?>
-<a onclick="doRequest('pauseunpause', '{$model->ip}', '{$model->id}', '{$model->config_authkey}')"><i class='fa fa-pause'></i></a>
+<a onclick="doRequest('pauseunpause', '<?= $model->ip ?>', '<?= $model->id ?>', '<?= $model->config_authkey ?>')"><i class='fa fa-pause'></i></a>
 <? endif ?>
 <? if(!Yii::$app->user->isGuest and Yii::$app->user->identity->is_admin and ($model->enable)): ?>
-<a onclick="doRequest('stop', '{$model->ip}', '{$model->id}', '{$model->config_authkey}')"><i class='fa fa-stop'></i></a>
+<a onclick="doRequest('stop', '<?= $model->ip ?>', '<?= $model->id ?>', '<?= $model->config_authkey ?>')"><i class='fa fa-stop'></i></a>
 <? endif ?>
 <? if(!Yii::$app->user->isGuest and Yii::$app->user->identity->is_admin and (!$model->enable and $model->status < 2)): ?>
 <a href='<?= Url::toRoute(['matches/update', 'id' => (string) $model->id]) ?>'><i class='fa fa-edit'></i></a>

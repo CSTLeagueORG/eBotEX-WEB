@@ -190,7 +190,7 @@
 				$map->match_id = $match->id;
 				$map->created_at = date('Y-m-d H:i:s');
 				$map->updated_at = date('Y-m-d H:i:s');
-				$map->insert();
+				$map->save();
 				if($i == 0) {
 					$match->current_map = $map->id;
 					$match->updated_at = date('Y-m-d H:i:s');
@@ -261,7 +261,7 @@
 				if(!isset($map->id)) {
 					$map->match_id = $match->id;
 					$map->created_at = date('Y-m-d H:i:s');
-					$map->insert();
+					$map->save();
 				} else {
 					$map->save();
 				}

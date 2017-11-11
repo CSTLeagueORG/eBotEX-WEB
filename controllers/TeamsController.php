@@ -11,6 +11,8 @@
 	use yii\web\NotFoundHttpException;
 	use yii\filters\VerbFilter;
 	use yii\web\ForbiddenHttpException;
+	use yii\web\BadRequestHttpException;
+	use yii\web\Response;
 
 	/**
 	 * TeamsController implements the CRUD actions for Teams model.
@@ -49,10 +51,12 @@
 		 * Lists all Teams models.
 		 *
 		 * @return mixed
+		 * @throws BadRequestHttpException
 		 */
 		public function actionGetbyseasons () {
+			Yii::$app->response->format = Response::FORMAT_JSON;
 			if(!isset(Yii::$app->request->post()['season_id'])) {
-				throw new NotFoundHttpException('Season not submitted');
+				throw new BadRequestHttpException('Season not submitted');
 			}
 			$teams = TeamsInSeasons::find()->where(['season_id' => Yii::$app->request->post()['season_id']])->all();
 			$result = [
@@ -86,6 +90,7 @@
 		 * If creation is successful, the browser will be redirected to the 'view' page.
 		 *
 		 * @return mixed
+		 * @throws ForbiddenHttpException
 		 */
 		public function actionCreate () {
 			if(Yii::$app->user->isGuest or !Yii::$app->user->identity->is_admin) {
@@ -108,6 +113,7 @@
 		 *
 		 * @param string $id
 		 * @return mixed
+		 * @throws ForbiddenHttpException
 		 */
 		public function actionUpdate ($id) {
 			if(Yii::$app->user->isGuest or !Yii::$app->user->identity->is_admin) {
@@ -130,6 +136,7 @@
 		 *
 		 * @param string $id
 		 * @return mixed
+		 * @throws ForbiddenHttpException
 		 */
 		public function actionDelete ($id) {
 			if(Yii::$app->user->isGuest or !Yii::$app->user->identity->is_admin) {
