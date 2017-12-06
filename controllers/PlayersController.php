@@ -4,10 +4,13 @@
 
 	use Yii;
 	use app\models\Stats\Players;
+	use app\models\Users\Users;
+	use app\models\Users\User;
 	use app\models\Stats\PlayersSearch;
 	use yii\web\Controller;
 	use yii\web\NotFoundHttpException;
 	use yii\filters\VerbFilter;
+	use yii\web\Response;
 
 	/**
 	 * PlayersController implements the CRUD actions for Players model.
@@ -40,6 +43,22 @@
 				'searchModel'  => $searchModel,
 				'dataProvider' => $dataProvider,
 			]);
+		}
+
+		/**
+		 * Get JSON of player.
+		 *
+		 * @param $steam
+		 * @return mixed
+		 * @throws NotFoundHttpException
+		 */
+		public function actionGet () {
+			Yii::$app->response->format = Response::FORMAT_JSON;
+			$res = Users::find()->where(['=', 'steamid', User::ToSteamID(Yii::$app->request->get('steam'))])->one();
+			if ($res == null) {
+				throw new NotFoundHttpException(Yii::t('app', 'The requested user does not exist.'));
+			}
+			return $res;
 		}
 
 		/**
