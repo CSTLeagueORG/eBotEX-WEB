@@ -4,6 +4,7 @@
 
 	use Yii;
 	use ErrorException;
+	use app\models\Matches\Lobbies;
 
 	/**
 	 * This is the model class for table "users".
@@ -15,8 +16,14 @@
 	 * @property string          $country
 	 * @property string          $name
 	 * @property string          $last_name
+	 *
+	 * @property Friends[] $friends
+	 * @property Friends[] $friends0
+	 * @property Lobbies[] $lobbies
 	 */
 	class Users extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface {
+		public $authKey;
+		public $accessToken;
 		/**
 		 * @inheritdoc
 		 */
@@ -95,7 +102,7 @@
 			}
 		}
 
-		function randString ($pass_len = 50) {
+		static function randString ($pass_len = 50) {
 			$allchars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 			$string = "";
 			mt_srand((double) microtime() * 1000000);
@@ -123,7 +130,7 @@
 				$user->steamid = self::ToSteamID($service->getAttribute('steamid'));
 				$user->country = $service->getAttribute('loccountrycode');
 				$user->is_admin = (self::find()->count() == 0)? 1 : 0;
-				$user->insert();
+				$user->save();
 			}
 
 			$id = $service->getId();
@@ -154,7 +161,7 @@
 					'steamid'     => $user->steamid,
 					'is_admin'    => $user->is_admin,
 					'authKey'     => 'zrsdhbntjn',
-					'accessToken' => 'yfghkyful',
+					'accessToken' => $token,
 				];
 			}
 			return ($user)? new static($user) : null;

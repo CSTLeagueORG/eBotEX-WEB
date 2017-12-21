@@ -2,11 +2,11 @@
 
 	namespace app\controllers;
 
+	use app\models\Users\Users;
 	use Yii;
 	use yii\filters\AccessControl;
 	use yii\web\Controller;
 	use yii\filters\VerbFilter;
-	use app\models\Users\User;
 
 	class MainController extends Controller {
 		/**
@@ -74,7 +74,7 @@
 			}
 
 			$serviceName = Yii::$app->getRequest()->getQueryParam('service');
-			if(isset($serviceName)) {
+			if(isset($serviceName) && $serviceName === 'steam') {
 				/** @var $eauth \nodge\eauth\ServiceBase */
 				$eauth = Yii::$app->get('eauth')->getIdentity($serviceName);
 				$eauth->setRedirectUrl(Yii::$app->getUser()->getReturnUrl());
@@ -84,7 +84,7 @@
 					if($eauth->authenticate()) {
 //                  var_dump($eauth->getIsAuthenticated(), $eauth->getAttributes()); exit;
 
-						$identity = User::findByEAuth($eauth);
+						$identity = Users::findByEAuth($eauth);
 						Yii::$app->getUser()->login($identity);
 
 						// special redirect with closing popup window
