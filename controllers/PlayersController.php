@@ -5,7 +5,6 @@
 	use Yii;
 	use app\models\Stats\Players;
 	use app\models\Users\Users;
-	use app\models\Users\User;
 	use app\models\Stats\PlayersSearch;
 	use yii\web\Controller;
 	use yii\web\NotFoundHttpException;
@@ -54,7 +53,7 @@
 		 */
 		public function actionGet () {
 			Yii::$app->response->format = Response::FORMAT_JSON;
-			$res = Users::find()->where(['=', 'steamid', User::ToSteamID(Yii::$app->request->get('steam'))])->one();
+			$res = Users::find()->where(['=', 'steamid', Users::ToSteamID(Yii::$app->request->get('steam'))])->one();
 			if ($res == null) {
 				throw new NotFoundHttpException(Yii::t('app', 'The requested user does not exist.'));
 			}
